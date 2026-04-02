@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Visual Identity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { height: 100%; }
+body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+#main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #EEEEEE;
+  padding: 48px;
+  padding-right: 340px;
+}
+
+#panel {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  bottom: 16px;
+  width: 300px;
+  background: rgba(255,255,255,0.60);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px 20px;
+  z-index: 100;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 12px;
+  color: #3a3a38;
+  display: flex;
+  flex-direction: column;
+}
+#panel-content { flex: 1 1 auto; }
+#panel-bottom { flex: 0 0 auto; margin-top: auto; }
+#panel::-webkit-scrollbar { width: 4px; }
+#panel::-webkit-scrollbar-track { background: transparent; }
+#panel::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 4px; }
+
+
+/* ============================================================
+   INTERFACE: Section Labels
+   ============================================================ */
+.interface-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #141412;
+  margin: 24px 0 8px;
+  font-family: inherit;
+  display: block;
+}
+.interface-section-label:first-child { margin-top: 0; }
+
+
+/* ============================================================
+   INTERFACE: Pill Tabs (single-select)
+   ============================================================ */
+.interface-pill-tabs {
+  display: flex;
+  background: rgba(0,0,0,0.08);
+  border-radius: 9999px;
+  padding: 2px;
+  margin-bottom: 12px;
+}
+.interface-pill-tab {
+  flex: 1;
+  padding: 8px 8px;
+  border: none;
+  border-radius: 9999px;
+  background: transparent;
+  color: #555;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.interface-pill-tab.active {
+  background: rgba(255,255,255,0.7);
+  color: #141412;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.interface-pill-tab:hover:not(.active) { color: #333; }
+
+
+/* ============================================================
+   INTERFACE: Parameter Row
+   ============================================================ */
+.interface-param-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+.interface-param-label {
+  flex: 1;
+  font-size: 12px;
+  color: #444;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   INTERFACE: Lock Button
+   ============================================================ */
+.interface-lock-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #141412;
+  --lock-opacity: 0.25;
+  transition: opacity 0.15s;
+  padding: 0;
+}
+.interface-lock-btn:hover { --lock-opacity: 0.5; }
+.interface-lock-btn.locked { --lock-opacity: 1; }
+.interface-lock-btn svg { width: 12px; height: 12px; }
+
+
+/* ============================================================
+   INTERFACE: Numeric Control (+/-)
+   ============================================================ */
+.interface-num-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.interface-num-input {
+  width: 48px;
+  height: 28px;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(0,0,0,0.08);
+  text-align: center;
+  font-size: 12px;
+  font-family: inherit;
+  color: #333;
+  outline: none;
+}
+.interface-num-input:focus { box-shadow: 0 0 0 2px rgba(0,0,0,0.1); }
+.interface-seg-pill {
+  display: flex;
+  border-radius: 9999px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.08);
+  height: 28px;
+}
+.interface-seg-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 15px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: background 0.1s;
+  padding: 0 0 2px;
+  line-height: 1;
+}
+.interface-seg-btn:hover { background: rgba(0,0,0,0.06); }
+.interface-seg-btn:first-child { border-right: 1px solid rgba(0,0,0,0.06); }
+
+
+/* ============================================================
+   INTERFACE: Select (Dropdown)
+   ============================================================ */
+.interface-select {
+  height: 28px;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(0,0,0,0.08);
+  padding: 0 28px 2px 12px;
+  font-size: 11px;
+  font-family: inherit;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  min-width: 100px;
+}
+.interface-select:focus { box-shadow: 0 0 0 2px rgba(0,0,0,0.1); }
+.interface-select.font-paste-target { outline: 2px solid transparent; outline-offset: 0; transition: outline-color 0.1s; }
+.interface-select.font-paste-target:hover,
+.interface-select.font-paste-target:focus { outline-color: #141412; }
+.dark-mode .interface-select.font-paste-target:hover,
+.dark-mode .interface-select.font-paste-target:focus { outline-color: #FAFAF8; }
+
+
+/* ============================================================
+   INTERFACE: Action Buttons (Lock All / Unlock All)
+   ============================================================ */
+.interface-action-row {
+  display: flex;
+  gap: 4px;
+  margin-top: 20px;
+}
+.interface-action-btn {
+  flex: 1;
+  padding: 8px 0;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(0,0,0,0.08);
+  color: #555;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.interface-action-btn:hover { background: rgba(0,0,0,0.14); }
+
+
+/* ============================================================
+   INTERFACE: Randomize Button
+   ============================================================ */
+.interface-randomize-btn {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-radius: 9999px;
+  background: #141412;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  margin-top: 24px;
+}
+/* ============================================================
+   INTERFACE: Color Palette Thumbnails
+   ============================================================ */
+.interface-palette-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.interface-palette-row:last-child { margin-bottom: 0; }
+.interface-palette-swatch.brand-swatch-card {
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  box-shadow: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  padding: 4px 5px;
+  box-sizing: border-box;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.1s;
+}
+.interface-palette-swatch:hover {
+  outline-color: #141412;
+}
+
+.interface-randomize-btn:hover  { background: #2a2a28; }
+.interface-randomize-btn:active { transform: scale(0.98); }
+.interface-export-btn {
+  width: 100%;
+  padding: 12px 0;
+  border: 1.5px solid #141412;
+  border-radius: 9999px;
+  background: none;
+  color: #141412;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  margin-top: 4px;
+}
+.interface-export-btn:hover  { opacity: 0.6; }
+.interface-export-btn:active { transform: scale(0.98); }
+
+/* ============================================================
+   INTERFACE: Export Checkbox Options
+   ============================================================ */
+.interface-export-options {
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+.interface-export-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0;
+  cursor: pointer;
+  font-size: 12px;
+  color: #444;
+  line-height: 1.3;
+}
+.interface-export-option input[type="checkbox"] {
+  margin: 1px 0 0;
+  flex-shrink: 0;
+  accent-color: #141412;
+}
+.interface-export-option-label { font-weight: 500; color: #3a3a38; }
+.interface-export-option-desc { font-size: 11px; color: #888; margin-top: 4px; }
+
+
+/* ============================================================
+   BRAND: Theme Variables (CSS Custom Properties)
+   ============================================================ */
+:root {
+  --font-mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', monospace;
+  --color-base-clear: #FAFAF8;
+  --color-base-cloudy: #F0EFE9;
+  --color-contrast-primary: #141412;
+  --color-contrast-secondary: rgba(20,20,18,0.62);
+  --font-family-heading: 'Georgia', serif;
+  --font-family-body: 'Inter', -apple-system, sans-serif;
+  --font-lineheight-heading: 1.0;
+  --font-lineheight-interface: 1.1;
+  --font-lineheight-paragraph: 1.4;
+  --radius-none: 0px;
+  --radius-s: 2px;
+  --radius-m: 4px;
+  --radius-l: 8px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+}
+.dark-mode {
+  --color-base-clear: #141412;
+  --color-base-cloudy: #1E1D1A;
+  --color-contrast-primary: #FAFAF8;
+  --color-contrast-secondary: rgba(250,250,248,0.62);
+}
+
+
+/* ============================================================
+   BRAND: Color Sections
+   ============================================================ */
+.brand-color-section { margin-bottom: 96px; }
+
+.brand-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  color: var(--color-contrast-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.brand-section-title:last-child, .brand-section-title:not(:has(+ .brand-section-subtitle)) {
+  margin-bottom: 20px;
+}
+.brand-section-title:has(+ .brand-section-subtitle) {
+  margin-bottom: 6px;
+}
+.brand-section-multiplier {
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(0,0,0,0.06);
+  color: var(--color-contrast-secondary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  border-radius: 4px;
+  padding: 0 4px;
+  line-height: 18px;
+}
+.dark-mode .brand-section-multiplier {
+  background: rgba(255,255,255,0.10);
+}
+.brand-section-subtitle {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-contrast-secondary);
+  margin-bottom: 28px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.4;
+}
+
+.brand-swatch-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+
+/* ============================================================
+   BRAND: Swatch Cards
+   ============================================================ */
+.brand-swatch-card {
+  min-width: 200px;
+  width: 248px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1), 0 1px 4px rgba(0,0,0,0.06);
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: 4px;
+  transition: outline-color 0.1s;
+}
+.brand-swatch-card:hover,
+.brand-swatch-card:focus-visible {
+  outline-color: #141412;
+}
+.dark-mode .brand-swatch-card:hover,
+.dark-mode .brand-swatch-card:focus-visible {
+  outline-color: #FAFAF8;
+}
+.brand-swatch-top {
+  min-height: 168px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1px;
+  position: relative;
+}
+.brand-swatch-top .brand-contrast-sample {
+  font-size: 13px;
+  font-weight: 400;
+  font-family: var(--font-mono);
+  display: block;
+}
+.brand-swatch-bottom {
+  padding: 16px 16px;
+  background: #FFFFFF;
+}
+.dark-mode .brand-swatch-bottom { background: var(--color-base-clear); }
+.brand-swatch-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #141412;
+  font-family: var(--font-mono);
+  margin-bottom: 8px;
+}
+.dark-mode .brand-swatch-name { color: var(--color-contrast-primary); }
+.brand-swatch-meta {
+  font-size: 10px;
+  color: #888;
+  font-family: var(--font-mono);
+  line-height: 1.6;
+}
+.dark-mode .brand-swatch-meta { color: rgba(250,250,248,0.45); }
+.brand-swatch-badges {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+/* Top-right actions overlaid on colored area (like backup) */
+.brand-swatch-top-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.brand-swatch-lock, .brand-swatch-remove-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.15);
+  color: rgba(255,255,255,0.9);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.brand-swatch-lock:hover, .brand-swatch-remove-btn:hover { background: rgba(0,0,0,0.28); }
+.brand-swatch-lock.locked { background: rgba(0,0,0,0.6); color: #fff; }
+.brand-swatch-lock svg { width: 12px; height: 12px; }
+.brand-swatch-remove-btn { font-size: 15px; line-height: 1; padding-bottom: 1px; font-family: inherit; }
+
+/* Shade indicator — top left of colored area */
+.brand-swatch-shade {
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  opacity: 0.55;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+/* Add (+) button — small circular, inline with swatches */
+.brand-swatch-add {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.1);
+  color: rgba(20,20,18,0.6);
+  font-size: 18px;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+  padding: 0;
+  padding-bottom: 1px;
+  font-family: inherit;
+  line-height: 24px;
+}
+.brand-swatch-add:hover { background: rgba(0,0,0,0.2); }
+.dark-mode .brand-swatch-add { background: rgba(255,255,255,0.12); color: rgba(250,250,248,0.6); }
+.dark-mode .brand-swatch-add:hover { background: rgba(255,255,255,0.22); }
+
+
+/* ============================================================
+   BRAND: Contrast Badges
+   ============================================================ */
+.brand-contrast-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 9px;
+  font-family: var(--font-mono);
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: rgba(20,20,18,0.08);
+  color: #888;
+}
+.brand-contrast-badge.aaa  { background: rgba(90,155,94,0.15);  color: #3D7A40; }
+.brand-contrast-badge.aa   { background: rgba(200,160,40,0.15); color: #8A7020; }
+.brand-contrast-badge.fail { background: rgba(217,79,67,0.15);  color: #B03A30; }
+.dark-mode .brand-contrast-badge       { background: rgba(250,250,248,0.08); color: rgba(250,250,248,0.5); }
+.dark-mode .brand-contrast-badge.aaa  { background: rgba(90,155,94,0.25);  color: #7BC47F; }
+.dark-mode .brand-contrast-badge.aa   { background: rgba(200,160,40,0.25); color: #D4C060; }
+.dark-mode .brand-contrast-badge.fail { background: rgba(217,79,67,0.25);  color: #E8807A; }
+
+
+/* ============================================================
+   BRAND: Gradient Strip (OKLCH scale)
+   ============================================================ */
+.brand-gradient-strip {
+  display: flex;
+  height: 24px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+.brand-gradient-step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* ============================================================
+   BRAND: Typography Section
+   ============================================================ */
+.brand-typo-section { margin-bottom: 96px; }
+.brand-typo-row {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(20,20,18,0.08);
+}
+.brand-typo-row:last-child { border-bottom: none; }
+.dark-mode .brand-typo-row { border-bottom-color: rgba(250,250,248,0.08); }
+.brand-typo-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #888;
+}
+.dark-mode .brand-typo-meta { color: rgba(250,250,248,0.4); }
+.brand-typo-meta span { white-space: nowrap; }
+.brand-typo-token-name { font-weight: 600; color: #141412; opacity: 0.5; }
+.dark-mode .brand-typo-token-name { color: rgba(250,250,248,0.7); opacity: 1; }
+
+
+/* ============================================================
+   BRAND: Token Preview Sections (Radius, Border, Spacing, Sizing)
+   ============================================================ */
+.brand-radius-section, .brand-border-section, .brand-spacing-section { margin-bottom: 96px; }
+.brand-radius-grid, .brand-border-grid {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+#sizing-preview, #spacing-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+.brand-radius-item, .brand-border-item, .brand-spacing-item, .brand-sizing-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.brand-radius-box { width: 64px; height: 64px; }
+.brand-border-box {
+  width: 64px;
+  height: 64px;
+  background: transparent;
+  border-color: var(--color-contrast-primary);
+  border-style: solid;
+  opacity: 0.7;
+  border-radius: 4px;
+}
+.brand-radius-token, .brand-border-token, .brand-spacing-label, .brand-sizing-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #444;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+.dark-mode .brand-radius-token, .dark-mode .brand-border-token,
+.dark-mode .brand-spacing-label, .dark-mode .brand-sizing-label { color: rgba(250,250,248,0.7); }
+.brand-radius-label, .brand-border-label, .brand-spacing-value, .brand-sizing-value {
+  font-size: 10px;
+  color: #888;
+  font-family: var(--font-mono);
+}
+.dark-mode .brand-radius-label, .dark-mode .brand-border-label,
+.dark-mode .brand-spacing-value, .dark-mode .brand-sizing-value { color: rgba(250,250,248,0.4); }
+.brand-token-label-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+
+/* ============================================================
+   BRAND: Keyboard Shortcuts Documentation
+   ============================================================ */
+.brand-hotkey-section { margin-bottom: 96px; }
+.brand-hotkey-section .brand-section-title + table { margin-bottom: 48px; }
+.brand-hotkey-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+.brand-hotkey-table th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-contrast-secondary);
+  padding: 0 16px 8px 0;
+  font-family: var(--font-mono);
+}
+.brand-hotkey-table td {
+  padding: 8px 16px 8px 0;
+  border-top: 1px solid var(--color-base-shade);
+  color: var(--color-contrast-primary);
+  vertical-align: top;
+}
+.brand-hotkey-table td:first-child {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 11px;
+  white-space: nowrap;
+  width: 80px;
+  min-width: 80px;
+}
+.brand-hotkey-table td:nth-child(2) {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-contrast-tertiary);
+  white-space: nowrap;
+  width: 100px;
+  min-width: 100px;
+}
+.brand-hotkey-table td:nth-child(3) {
+  font-size: 11px;
+  color: var(--color-contrast-secondary);
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   ARTICLE: Content Preview Page
+   ============================================================ */
+.article { max-width: 840px; }
+.article h1, .article h2, .article h3 {
+  font-family: var(--font-family-heading);
+  color: var(--color-contrast-primary);
+}
+.article p {
+  font-family: var(--font-family-body);
+  color: var(--color-contrast-primary);
+}
+.article img {
+  width: 100%;
+  border-radius: var(--radius-l);
+  display: block;
+}
+.article blockquote {
+  border-left: 3px solid;
+  padding: 16px 24px;
+  font-family: var(--font-family-body);
+  font-style: italic;
+  color: var(--color-contrast-primary);
+}
+.article ul, .article ol {
+  font-family: var(--font-family-body);
+  color: var(--color-contrast-primary);
+  padding-left: 24px;
+}
+.article li { margin-bottom: 4px; }
+.article code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-base-shade);
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.article pre {
+  background: var(--color-base-cloudy);
+  padding: 20px;
+  border-radius: var(--radius-m);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-contrast-primary);
+  line-height: 1.5;
+}
+.article hr {
+  border: none;
+  height: 1px;
+  background: var(--color-base-shade);
+}
+.article .caption {
+  font-size: 12px;
+  color: var(--color-contrast-secondary);
+  font-family: var(--font-family-body);
+}
+.article .callout {
+  padding: 20px;
+  border-left: 3px solid;
+  font-family: var(--font-family-body);
+  color: var(--color-contrast-primary);
+}
+.article table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-family-body);
+  font-size: 14px;
+  color: var(--color-contrast-primary);
+}
+.article table th {
+  text-align: left;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--color-base-shade);
+  color: var(--color-contrast-primary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.article table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--color-base-shade);
+  color: var(--color-contrast-primary);
+}
+.article table tr:last-child td { border-bottom: none; }
+.article .two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+
+/* ============================================================
+   COMPONENTS: Action Tokens
+   ============================================================ */
+.comp-action-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+.comp-action-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.comp-action-group-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-contrast-primary);
+  font-family: var(--font-mono);
+  margin-bottom: 4px;
+}
+.comp-action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+.comp-action-pair {
+  display: flex;
+  gap: 80px;
+}
+.comp-action-btn {
+  box-sizing: border-box;
+  height: 40px;
+  padding: 0 24px;
+  border-radius: var(--radius-m);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font-family-body);
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  outline: 2px solid transparent;
+  outline-offset: 4px;
+}
+.comp-action-btn[data-action-id] {
+  cursor: pointer;
+}
+.comp-action-btn[data-action-id]:hover {
+  outline-color: var(--color-contrast-primary);
+}
+.comp-action-detail {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.comp-action-detail span {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--color-contrast-secondary);
+  white-space: nowrap;
+}
+.comp-action-detail .brand-contrast-badge {
+  margin-top: 4px;
+  width: fit-content;
+}
+
+/* Card gallery */
+.comp-cards-grid {
+  display: grid;
+  gap: 32px;
+  max-width: 1280px;
+}
+.comp-cards-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+.comp-cards-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.comp-cards-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.comp-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1), 0 1px 4px rgba(0,0,0,0.06);
+  outline: 2px solid transparent;
+  outline-offset: 4px;
+  transition: outline-color 0.1s;
+}
+.comp-card:hover { outline-color: var(--color-contrast-primary); }
+
+/* Button size grid */
+.comp-size-grid {
+  display: grid;
+  grid-template-columns: auto repeat(4, minmax(auto, 200px));
+  gap: 24px 48px;
+  align-items: center;
+  justify-items: center;
+  max-width: 900px;
+}
+.comp-size-grid .comp-size-label { justify-self: start; }
+.comp-size-header, .comp-size-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-contrast-secondary);
+  font-family: var(--font-mono);
+}
+.comp-size-header { text-align: center; }
+
+/* Input field previews */
+.comp-input-states {
+  display: flex;
+  gap: 80px;
+  flex-wrap: wrap;
+  max-width: 1280px;
+}
+.comp-input-item {
+  flex: 1 1 200px;
+  max-width: 280px;
+}
+.comp-input-field {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--color-base-shade);
+  border-radius: 8px;
+  background: var(--color-base-clear);
+  color: var(--color-contrast-primary);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+}
+.comp-input-label-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.comp-input-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-contrast-primary);
+}
+.comp-input-helper {
+  font-size: 11px;
+  color: var(--color-contrast-secondary);
+}
+.comp-input-detail {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.comp-input-detail span {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--color-contrast-secondary);
+}
+
+/* ============================================================
+   KEY LEGEND PILL
+   ============================================================ */
+#key-legend {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  z-index: 9999;
+  pointer-events: none;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 20px;
+  background: #141412;
+}
+#key-legend.visible { display: flex; }
+.key-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.20);
+  color: #FAFAF8;
+  font-family: 'SF Mono', SFMono-Regular, ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background 0.1s, color 0.1s;
+}
+.key-badge.active {
+  background: #FAFAF8;
+  color: #141412;
+}
+.key-badge.dimmed {
+  background: rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.35);
+}
+.key-legend-desc {
+  color: #FAFAF8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+.key-legend-desc strong {
+  font-weight: 700;
+}
+
+</style>
+</head>
+<body>
+
+<div id="key-legend"></div>
+
+<div id="main">
+
+  <!-- PAGE: Overview -->
+  <div id="page-overview">
+
+    <!-- Foundation Colors -->
+    <div class="brand-color-section">
+      <div class="brand-section-title" id="section-title-foundation">Foundation Colors</div>
+      <div class="brand-swatch-grid" id="swatches-foundation"></div>
+    </div>
+
+    <!-- Brand Colors -->
+    <div class="brand-color-section">
+      <div class="brand-section-title">Brand Colors</div>
+      <div class="brand-swatch-grid" id="swatches-brand"></div>
+    </div>
+
+    <!-- Accent Colors -->
+    <div class="brand-color-section">
+      <div class="brand-section-title">Accent Colors</div>
+      <div class="brand-swatch-grid" id="swatches-accent"></div>
+    </div>
+
+    <!-- Combo Colors -->
+    <div class="brand-color-section">
+      <div class="brand-section-title">Combos</div>
+      <div class="brand-swatch-grid" id="swatches-combo"></div>
+    </div>
+
+    <!-- Feedback Colors -->
+    <div class="brand-color-section">
+      <div class="brand-section-title">Feedback Colors</div>
+      <div class="brand-swatch-grid" id="swatches-feedback"></div>
+    </div>
+
+    <!-- Typography Scale -->
+    <div class="brand-typo-section">
+      <div class="brand-section-title" id="section-title-typo">Typography Scale</div>
+      <div id="typo-preview"></div>
+    </div>
+
+    <!-- Size -->
+    <div class="brand-spacing-section">
+      <div class="brand-section-title" id="section-title-sizing">Size</div>
+      <div id="sizing-preview"></div>
+    </div>
+
+    <!-- Space -->
+    <div class="brand-spacing-section">
+      <div class="brand-section-title" id="section-title-spacing">Space</div>
+      <div id="spacing-preview"></div>
+    </div>
+
+    <!-- Border Radius -->
+    <div class="brand-radius-section">
+      <div class="brand-section-title" id="section-title-radius">Border Radius</div>
+      <div class="brand-radius-grid" id="radius-preview"></div>
+    </div>
+
+    <!-- Border -->
+    <div class="brand-border-section">
+      <div class="brand-section-title" id="section-title-border">Border</div>
+      <div class="brand-border-grid" id="border-preview"></div>
+    </div>
+
+    <!-- Shortcuts -->
+    <div class="brand-hotkey-section">
+      <div class="brand-section-title">Color Card Shortcuts</div>
+      <table class="brand-hotkey-table"><tbody>
+        <tr><td>Backspace</td><td>Reset</td><td>Reset to initial value</td></tr>
+        <tr><td>B</td><td>Shade</td><td>Hold B + &larr;&darr;/&rarr;&uarr;: Step through OKLCH shades</td></tr>
+        <tr><td>H</td><td>Hue</td><td>Hold H + &larr;&darr;/&rarr;&uarr;: Adjust &minus;/+1</td></tr>
+        <tr><td>S</td><td>Saturation</td><td>Hold S + &larr;&darr;/&rarr;&uarr;: Adjust &minus;/+1</td></tr>
+        <tr><td>L</td><td>Lightness</td><td>Hold L + &larr;&darr;/&rarr;&uarr;: Adjust &minus;/+1</td></tr>
+        <tr><td>&#8984;C</td><td>Copy</td><td>Copy HEX (of the highlighted shade)</td></tr>
+        <tr><td>&#8984;V</td><td>Paste</td><td>Paste HEX (6-digit, with or without #)</td></tr>
+        <tr><td>&#8984;D</td><td>Duplicate</td><td>Duplicate color</td></tr>
+      </tbody></table>
+
+      <div class="brand-section-title">Combo Shortcuts</div>
+      <table class="brand-hotkey-table"><tbody>
+        <tr><td>Backspace</td><td>Reset</td><td>Reset combo to defaults</td></tr>
+        <tr><td>I</td><td>Theme</td><td>Toggle themed/inverted</td></tr>
+        <tr><td>F</td><td>Foreground</td><td>Hold F + 1–9: Set palette color / Hold F + &larr;&darr;/&rarr;&uarr;: Step through shade scale</td></tr>
+        <tr><td>B</td><td>Background</td><td>Hold B + 1–9: Set palette color / Hold B + &larr;&darr;/&rarr;&uarr;: Step through shade scale</td></tr>
+        <tr><td>&#8984;D</td><td>Duplicate</td><td>Duplicate combo</td></tr>
+      </tbody></table>
+
+      <div class="brand-section-title">Font Shortcuts</div>
+      <table class="brand-hotkey-table"><tbody>
+        <tr><td>&#8984;V</td><td>Font</td><td>Paste Google Font URL in font dropdowns (Sans/Serif) to use</td></tr>
+      </tbody></table>
+
+      <div class="brand-section-title">Background Shortcuts</div>
+      <table class="brand-hotkey-table"><tbody>
+        <tr><td>Backspace</td><td>Reset</td><td>Reset to default</td></tr>
+        <tr><td>C</td><td>Color</td><td>Hold C + Backspace: Reset / Hold C + 1–9: Selected color / Hold C + &larr;&rarr;: Step shade</td></tr>
+      </tbody></table>
+    </div>
+
+  </div>
+
+  <!-- PAGE: Components -->
+  <div id="page-components" style="display:none">
+
+    <!-- Cards -->
+    <div class="brand-color-section">
+      <div class="brand-section-title">Cards</div>
+      <div class="brand-section-subtitle">Preview only — demonstrates how semantic token sets can be varied. A representative card is automatically exported as component tokens.</div>
+      <div id="comp-cards"></div>
+    </div>
+
+    <!-- Action -->
+    <div class="brand-color-section">
+      <div class="brand-section-title">Action</div>
+      <div class="brand-section-subtitle">The default set below is exported as configured — Primary, Secondary, Tertiary — plus two additional sets (Black &amp; White) that are always included.</div>
+      <div id="comp-action"></div>
+    </div>
+
+    <!-- Input Fields -->
+    <div class="brand-color-section">
+      <div class="brand-section-title">Input Fields</div>
+      <div class="brand-section-subtitle">Preview only — shows how semantic tokens affect input field appearance. All input field states are exported as component tokens.</div>
+      <div id="comp-input"></div>
+    </div>
+
+    <!-- Keyboard Shortcuts -->
+    <div class="brand-hotkey-section">
+      <div class="brand-section-title">Button/Card Shortcuts</div>
+      <table class="brand-hotkey-table"><tbody>
+        <tr><td>Backspace</td><td>Reset</td><td>Reset all overrides to default</td></tr>
+        <tr><td>C</td><td>Color</td><td>Hold C + 1&ndash;9: Select / C + 0: Cycle through foundation combos / C + &larr;&rarr;: Cycle through colors</td></tr>
+        <tr><td>F</td><td>Foreground</td><td>Hold F + 1&ndash;9: Set FG color / F + &larr;&rarr;: Step through shades / F + 0: Cycle through foundation FGs</td></tr>
+        <tr><td>B</td><td>Background</td><td>Hold B + 1&ndash;9: Set BG color / B + &larr;&rarr;: Step through shades / B + 0: Cycle through foundation BGs</td></tr>
+        <tr><td>V</td><td>Variant</td><td>Cycle through: Solid &rarr; Outline &rarr; Ghost</td></tr>
+        <tr><td>R</td><td>Border Radius</td><td>Hold R + &larr;&rarr;: Step through radius tokens / R + 0: None</td></tr>
+        <tr><td>W</td><td>Border Width</td><td>Hold W + &larr;&rarr;: Step through border tokens / W + 0: None</td></tr>
+        <tr><td>I</td><td>Invert</td><td>Toggle Themed / Inverted</td></tr>
+        <tr><td>S</td><td>Swap</td><td>Swap FG / BG (C mode only)</td></tr>
+        <tr><td>T</td><td>Tint</td><td>Toggle: Contrast Primary / Contrast Secondary for label</td></tr>
+      </tbody></table>
+    </div>
+
+  </div>
+
+  <!-- PAGE: Article -->
+  <div id="page-article" style="display:none">
+    <div class="article" id="article-content"></div>
+  </div>
+
+</div>
+
+<!-- Floating Panel -->
+<div id="panel">
+<div id="panel-content">
+
+  <!-- Light / Dark Toggle -->
+  <div class="interface-pill-tabs" id="modeTabs">
+    <button class="interface-pill-tab active" data-mode="light">Light</button>
+    <button class="interface-pill-tab" data-mode="dark">Dark</button>
+  </div>
+
+  <!-- Page Switcher -->
+  <div class="interface-pill-tabs" id="pageTabs">
+    <button class="interface-pill-tab active" data-page="overview">Overview</button>
+    <button class="interface-pill-tab" data-page="components">Comps</button>
+    <button class="interface-pill-tab" data-page="article">Article</button>
+  </div>
+
+  <!-- Typography -->
+  <div class="interface-section-label">Typography</div>
+
+  <div class="interface-param-row">
+    <span class="interface-param-label">Scale</span>
+    <button class="interface-lock-btn" data-param="scale" onclick="toggleLock(this)"></button>
+    <div class="interface-num-ctrl">
+      <input class="interface-num-input" id="p-scale" value="1.0" min="0.5" max="2.0" step="0.05" onchange="clampInput(this)">
+      <div class="interface-seg-pill">
+        <button class="interface-seg-btn" onclick="adj('scale',-0.05)">&minus;</button>
+        <button class="interface-seg-btn" onclick="adj('scale',0.05)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="interface-param-row">
+    <span class="interface-param-label">Line Height</span>
+    <button class="interface-lock-btn" data-param="lh" onclick="toggleLock(this)"></button>
+    <div class="interface-num-ctrl">
+      <input class="interface-num-input" id="p-lh" value="1.0" min="0.8" max="1.4" step="0.05" onchange="clampInput(this)">
+      <div class="interface-seg-pill">
+        <button class="interface-seg-btn" onclick="adj('lh',-0.05)">&minus;</button>
+        <button class="interface-seg-btn" onclick="adj('lh',0.05)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="interface-param-row">
+    <span class="interface-param-label">Paragraph Height</span>
+    <button class="interface-lock-btn" data-param="ph" onclick="toggleLock(this)"></button>
+    <div class="interface-num-ctrl">
+      <input class="interface-num-input" id="p-ph" value="1.0" min="0.8" max="2.0" step="0.1" onchange="clampInput(this)">
+      <div class="interface-seg-pill">
+        <button class="interface-seg-btn" onclick="adj('ph',-0.1)">&minus;</button>
+        <button class="interface-seg-btn" onclick="adj('ph',0.1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="interface-param-row">
+    <span class="interface-param-label">Heading–Paragraph</span>
+    <button class="interface-lock-btn" data-param="pairing" onclick="toggleLock(this)"></button>
+    <select class="interface-select" id="p-pairing" onchange="update()">
+      <option value="serif-sans" selected>Serif–Sans</option>
+      <option value="sans-sans">Sans–Sans</option>
+      <option value="serif-serif">Serif–Serif</option>
+      <option value="sans-serif">Sans–Serif</option>
+    </select>
+  </div>
+
+  <div class="interface-param-row">
+    <span class="interface-param-label">Interface</span>
+    <button class="interface-lock-btn" data-param="fontInterface" onclick="toggleLock(this)"></button>
+    <select class="interface-select" id="p-fontInterface" onchange="update()">
+      <option value="sans" selected>Sans</option>
+      <option value="serif">Serif</option>
+    </select>
+  </div>
+
+  <div class="interface-param-row">
+    <span class="interface-param-label">Sans</span>
+    <button class="interface-lock-btn" data-param="fontSans" onclick="toggleLock(this)"></button>
+    <select class="interface-select" id="p-fontSans" onchange="update()" style="min-width:140px"></select>
+  </div>
+
+  <div class="interface-param-row">
+    <span class="interface-param-label">Serif</span>
+    <button class="interface-lock-btn" data-param="fontSerif" onclick="toggleLock(this)"></button>
+    <select class="interface-select" id="p-fontSerif" onchange="update()" style="min-width:140px"></select>
+  </div>
+
+  <div class="interface-param-row">
+    <span class="interface-param-label">Weight</span>
+    <button class="interface-lock-btn" data-param="weight" onclick="toggleLock(this)"></button>
+    <select class="interface-select" id="p-weight" onchange="update()">
+      <option value="uniform">Uniform</option>
+      <option value="moderate" selected>Moderate</option>
+      <option value="strong">Strong</option>
+    </select>
+  </div>
+
+  <!-- Shape & Space -->
+  <div class="interface-section-label">Shape & Space</div>
+
+  <div class="interface-param-row">
+    <span class="interface-param-label">Size</span>
+    <button class="interface-lock-btn" data-param="dimension" onclick="toggleLock(this)"></button>
+    <div class="interface-num-ctrl">
+      <input class="interface-num-input" id="p-dimension" value="1.0" min="0.5" max="2.0" step="0.05" onchange="clampInput(this)">
+      <div class="interface-seg-pill">
+        <button class="interface-seg-btn" onclick="adj('dimension',-0.05)">&minus;</button>
+        <button class="interface-seg-btn" onclick="adj('dimension',0.05)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="interface-param-row">
+    <span class="interface-param-label">Space</span>
+    <button class="interface-lock-btn" data-param="space" onclick="toggleLock(this)"></button>
+    <div class="interface-num-ctrl">
+      <input class="interface-num-input" id="p-space" value="1.0" min="0.5" max="2.5" step="0.1" onchange="clampInput(this)">
+      <div class="interface-seg-pill">
+        <button class="interface-seg-btn" onclick="adj('space',-0.1)">&minus;</button>
+        <button class="interface-seg-btn" onclick="adj('space',0.1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="interface-param-row">
+    <span class="interface-param-label">Border Radius</span>
+    <button class="interface-lock-btn" data-param="roundness" onclick="toggleLock(this)"></button>
+    <div class="interface-num-ctrl">
+      <input class="interface-num-input" id="p-roundness" value="1.0" min="0.25" max="4.0" step="0.25" onchange="clampInput(this)">
+      <div class="interface-seg-pill">
+        <button class="interface-seg-btn" onclick="adj('roundness',-0.25)">&minus;</button>
+        <button class="interface-seg-btn" onclick="adj('roundness',0.25)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="interface-param-row">
+    <span class="interface-param-label">Border Width</span>
+    <button class="interface-lock-btn" data-param="borderWidth" onclick="toggleLock(this)"></button>
+    <div class="interface-num-ctrl">
+      <input class="interface-num-input" id="p-borderWidth" value="1" min="1" max="4" step="1" onchange="clampInput(this)">
+      <div class="interface-seg-pill">
+        <button class="interface-seg-btn" onclick="adj('borderWidth',-1)">&minus;</button>
+        <button class="interface-seg-btn" onclick="adj('borderWidth',1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Color Palette -->
+  <div class="interface-section-label">Brand Colors</div>
+  <div id="panel-palette-brand"></div>
+  <div id="panel-palette-accent-wrap" style="display:none;margin-top:24px">
+    <div class="interface-section-label" style="margin-top:0">Accent Colors</div>
+    <div id="panel-palette-accent"></div>
+  </div>
+  <div id="panel-palette-combo-wrap" style="display:none;margin-top:24px">
+    <div class="interface-section-label" style="margin-top:0">Combos</div>
+    <div id="panel-palette-combo"></div>
+  </div>
+
+  <!-- Lock All / Unlock All -->
+  <div class="interface-action-row">
+    <button class="interface-action-btn" onclick="lockAll()">Lock All</button>
+    <button class="interface-action-btn" onclick="unlockAll()">Unlock All</button>
+  </div>
+
+  <!-- Randomize -->
+  <button class="interface-randomize-btn" onclick="randomize()">Randomize</button>
+
+</div><!-- /panel-content -->
+<div id="panel-bottom">
+  <div class="interface-export-options">
+    <div class="interface-section-label" style="margin-top:0">Optional Collections</div>
+    <label class="interface-export-option">
+      <input type="checkbox" id="export-breakpoints">
+      <div>
+        <div class="interface-export-option-label">Breakpoints (adds: S/M/L/XL/2XL)</div>
+        <div class="interface-export-option-desc">Adds collections with frame width and headlines per breakpoint mode</div>
+      </div>
+    </label>
+    <label class="interface-export-option">
+      <input type="checkbox" id="export-contrast">
+      <div>
+        <div class="interface-export-option-label">Accessibility (adds: High Contrast)</div>
+        <div class="interface-export-option-desc">WCAG AAA OKLCH shades selected</div>
+      </div>
+    </label>
+    <label class="interface-export-option">
+      <input type="checkbox" id="export-density">
+      <div>
+        <div class="interface-export-option-label">Density (adds: Compact)</div>
+        <div class="interface-export-option-desc">Size and spacing scaled down 2 steps</div>
+      </div>
+    </label>
+    <label class="interface-export-option">
+      <input type="checkbox" id="export-colors">
+      <div>
+        <div class="interface-export-option-label">Colors (Brand/Accent/Combos)</div>
+        <div class="interface-export-option-desc">Each color as a switchable collection</div>
+      </div>
+    </label>
+    <label class="interface-export-option">
+      <input type="checkbox" id="export-typography">
+      <div>
+        <div class="interface-export-option-label">Typography</div>
+        <div class="interface-export-option-desc">Adds a collection so font families &amp; weights per platform can be added (e.g. iOS, Android)</div>
+      </div>
+    </label>
+  </div>
+
+  <button class="interface-export-btn" onclick="exportTokens()">Export Tokens</button>
+
+</div><!-- /panel-bottom -->
+</div><!-- /panel -->
+
+
+<script src="src/color-math.js"></script>
+<script src="src/token-calculations.js"></script>
+<script src="src/data-constants.js"></script>
+<script src="src/swatch-builders.js"></script>
+<script src="src/ui-controls.js"></script>
+<script src="src/randomize.js"></script>
+<script src="src/render-overview.js"></script>
+<script src="src/render-components.js"></script>
+<script src="src/render-inputs.js"></script>
+<script src="src/render-article.js"></script>
+<script src="src/update.js"></script>
+<script src="src/keyboard-interactions.js"></script>
+<script src="src/key-legend.js"></script>
+<script src="src/export-tokens.js"></script>
+<script src="src/url-params.js"></script>
+</body>
+</html>
