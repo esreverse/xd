@@ -30,7 +30,8 @@ Open a WYSIWYG visual explorer in the browser, configure a complete design syste
 **Every state lives in the URL.** All parameters — colors, typography, spacing, design decisions — are encoded as a URL hash, so any configuration can be bookmarked, shared, embedded in docs, or restored months later by opening the link.
 
 
-### Starting points
+
+### Starting Points
 
 Begin from any of these — Claude maps the source to the parametric tool:
 
@@ -45,7 +46,8 @@ Begin from any of these — Claude maps the source to the parametric tool:
 - **Manual** — open the tool with defaults and configure visually
 
 
-### Visual explorer
+
+### Visual Explorer
 
 A fully parametric, real-time design system explorer.
 
@@ -56,6 +58,7 @@ A fully parametric, real-time design system explorer.
 **Typography** — sans + serif pairing with role assignment, direct Google Fonts integration, independent weight and scale control per role.
 
 **Other dimensions** — spacing density, border radius scale, elevation (flat / drop shadows), surface style (solids / gradients / meshes), component style (outlined / subtle / solid).
+
 
 
 ### Exports
@@ -73,7 +76,8 @@ A folder under `Design/styles/{name}/` containing:
 Take the exported DTCG token files and write them into a Figma file as native Variables, Text Styles, and Effect Styles.
 
 
-### What it implements
+
+### What It Implements
 
 **Variable Collections**, built bottom-up with the alias chain `Component → Colors → Semantic → Core`:
 
@@ -88,6 +92,7 @@ Take the exported DTCG token files and write them into a Figma file as native Va
 **Effect Styles** — one per elevation level. Shadow color is variable-bound.
 
 **Naming and order** — every variable carries its collection prefix; collections are reordered in the sidebar after creation (Component → Colors → Semantic → Typography → Breakpoints → Density → Core).
+
 
 
 ### Requirements
