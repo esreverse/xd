@@ -55,7 +55,7 @@ A fully parametric, real-time design system explorer.
 
 **Color system** — up to 6 brand colors, multiple accent and combo colors, feedback colors (info / success / warning / error), foundation tint (warm / cool / neutral). Each palette automatically generates `themed`, `inverted`, `with-light`, `with-dark`, `surface`, and `surface-contrast` variants. **Live WCAG AA contrast checks** on every text-on-background pairing.
 
-**Typography** — sans + serif pairing with role assignment, direct Google Fonts integration, independent weight and scale control per role.
+**Typography** — sans + serif pairing with role assignment, **direct Google Fonts integration**, independent weight and scale control per role.
 
 **Other dimensions** — spacing density, border radius scale, elevation (flat / drop shadows), surface style (solids / gradients / meshes), component style (outlined / subtle / solid).
 
