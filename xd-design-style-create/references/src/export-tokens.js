@@ -3,10 +3,10 @@
    EXPORT TOKENS — generates 4 DTCG JSON files
    ================================================================ */
 
-function exportTokens() {
-  try { return _exportTokensImpl(); } catch (e) { console.error('Export error:', e); alert('Export failed: ' + e.message + '\n\nSee browser console (F12) for stack trace.'); }
+async function exportTokens() {
+  try { return await _exportTokensImpl(); } catch (e) { console.error('Export error:', e); alert('Export failed: ' + e.message + '\n\nSee browser console (F12) for stack trace.'); }
 }
-function _exportTokensImpl() {
+async function _exportTokensImpl() {
   /* ── Parameters ── */
   const sf  = val('space');
   const df  = val('dimension');
@@ -115,30 +115,26 @@ function _exportTokensImpl() {
   };
   /* Compute alphas — name = resolved alpha (no suffix) */
   const dA_secondary    = findAlpha(_dc, _lc, 0.40, AA, _lk);
-  const dA_secondaryAAA = findAlpha(_dc, _lc, 0.40, AAA, _lk);
   const dA_tertiary  = 40;
   const dA_shine     = 10;
   const dA_subtle    = findAlpha(_dc, _lc, 0.05, 1.1, _lc);
   const dA_dash      = 15;                                        /* fixed 15% for dashes/lines */
   const lA_secondary    = findAlpha(_lc, _dc, 0.40, AA, _dk);
-  const lA_secondaryAAA = findAlpha(_lc, _dc, 0.40, AAA, _dk);
   const lA_tertiary  = 40;
   const lA_shine     = 10;
   const lA_subtle    = findAlpha(_lc, _dc, 0.05, 1.1, _dc);
   const lA_dash      = 15;                                        /* fixed 15% for dashes/lines */
   /* Store resolved alpha names for semantic references */
-  const _dN = { secondary: dA_secondary.alpha, secondaryAAA: dA_secondaryAAA.alpha, tertiary: dA_tertiary, shine: dA_shine, subtle: dA_subtle.alpha, dash: dA_dash };
-  const _lN = { secondary: lA_secondary.alpha, secondaryAAA: lA_secondaryAAA.alpha, tertiary: lA_tertiary, shine: lA_shine, subtle: lA_subtle.alpha, dash: lA_dash };
+  const _dN = { secondary: dA_secondary.alpha, tertiary: dA_tertiary, shine: dA_shine, subtle: dA_subtle.alpha, dash: dA_dash };
+  const _lN = { secondary: lA_secondary.alpha, tertiary: lA_tertiary, shine: lA_shine, subtle: lA_subtle.alpha, dash: lA_dash };
   /* Dark alpha tokens (dark fg on light bg) — token name = a[resolved alpha] */
   core.color.dark[`clear-a${_dN.secondary}`]    = col(rgbaBase(_dc, _dN.secondary / 100));
-  core.color.dark[`clear-a${_dN.secondaryAAA}`] = col(rgbaBase(_dc, _dN.secondaryAAA / 100));
   core.color.dark[`clear-a${_dN.tertiary}`]     = col(rgbaBase(_dc, _dN.tertiary / 100));
   core.color.dark[`clear-a${_dN.shine}`]        = col(rgbaBase(_dc, _dN.shine / 100));
   core.color.dark[`clear-a${_dN.subtle}`]       = col(rgbaBase(_dc, _dN.subtle / 100));
   core.color.dark[`clear-a${_dN.dash}`]         = col(rgbaBase(_dc, _dN.dash / 100));
   /* Light alpha tokens (light fg on dark bg) */
   core.color.light[`clear-a${_lN.secondary}`]    = col(rgbaBase(_lc, _lN.secondary / 100));
-  core.color.light[`clear-a${_lN.secondaryAAA}`] = col(rgbaBase(_lc, _lN.secondaryAAA / 100));
   core.color.light[`clear-a${_lN.tertiary}`]     = col(rgbaBase(_lc, _lN.tertiary / 100));
   core.color.light[`clear-a${_lN.shine}`]        = col(rgbaBase(_lc, _lN.shine / 100));
   core.color.light[`clear-a${_lN.subtle}`]       = col(rgbaBase(_lc, _lN.subtle / 100));
@@ -256,29 +252,20 @@ function _exportTokensImpl() {
         },
       },
     },
-    space: { padding: {}, gap: {}, 'margin-x': {}, 'margin-y': {}, article: {} },
+    space: {},
     size: { icon: {}, action: {} },
     radius: {},
     border: { width: {} },
     typography: { interface: {}, paragraph: {}, heading: {}, caps: {}, code: {} },
     elevation: {},
     opacity: { enabled: { $value: '{core.opacity.100}', $type: 'number' }, disabled: { $value: '{core.opacity.40}', $type: 'number' } },
-    grid: { margin: {}, gutter: {} },
   };
 
   /* ── Semantic spacing (t-shirt → core grid unit = value/4) ── */
   const spKey = (name) => { const s = spacing.find(x => x.name === name); return s ? Math.round(s.val / 4) : 0; };
   const spRef = (name) => ({ $value: `{core.space.${spKey(name)}}`, $type: 'dimension' });
-  const padMap = { none: '0', '2XS': '2XS', XS: 'XS', S: 'S', M: 'M', L: 'L', XL: 'XL', '2XL': '2XL' };
-  Object.entries(padMap).forEach(([tshirt, coreName]) => {
-    if (!spacing.find(x => x.name === coreName)) return;
-    semantic.space.padding[tshirt] = spRef(coreName);
-    semantic.space['margin-x'][tshirt] = spRef(coreName);
-    semantic.space['margin-y'][tshirt] = spRef(coreName);
-  });
-  semantic.space.gap.none = spRef('0');
-  ['XS','S','M','L','XL'].forEach(k => { if (spacing.find(x => x.name === k)) semantic.space.gap[k] = spRef(k); });
-  ['XS','S','M','L','XL'].forEach(k => { if (spacing.find(x => x.name === k)) semantic.space.article[k] = spRef(k); });
+  semantic.space.none = spRef('0');
+  ['2XS','XS','S','M','L','XL','2XL','3XL'].forEach(k => { if (spacing.find(x => x.name === k)) semantic.space[k] = spRef(k); });
 
   /* ── Semantic sizing (t-shirt → core grid unit = value/4) ── */
   sizing.forEach(s => {
@@ -426,14 +413,6 @@ function _exportTokensImpl() {
     return { ref: `{core.color.${ck}.${step}}`, hex, coreKey: ck, idx, scale };
   }
 
-  /* Canonical variant: always derived from group, ignoring mutable state.variant.
-     Primary = solid, Secondary = outline, Tertiary = ghost. */
-  function canonicalVariant(state) {
-    if (state.group === 'Primary') return 'solid';
-    if (state.group === 'Secondary') return 'outline';
-    return 'ghost';
-  }
-
   /* Build one mode of an action set.
      Mirrors resolveButtonTokens() logic from render-components.js.
      For inverted mode: same logic but with inverted flag toggled.
@@ -485,13 +464,22 @@ function _exportTokensImpl() {
         }
       }
     } else {
-      /* ── Outline / Ghost ── */
-      baseRef = col('{core.color.transparent}');
-      contrastRef2 = col(`{semantic.color.${key}.${mode}.base}`);
-      baseCk = ck; baseIdx = null;
+      /* ── Outline / Ghost ──
+         Base = visible color (outline + text); higher/lower = ±1 step for hover/pressed washes.
+         Contrast = page canvas (foundation base-clear) since there is no filled surface. */
+      const visibleBaseToken = `{semantic.color.${key}.${mode}.base}`;
+      baseRef = col(visibleBaseToken);
+      contrastRef2 = col(`{semantic.color.foundation.${mode}.base-clear}`);
       const palette = allBrandAccent;
       const colorDef = palette.find(c => c.key === key);
-      if (colorDef) baseScale = getScale(colorDef.hex);
+      if (colorDef) {
+        const scale = getScale(colorDef.hex);
+        let idx = closestIdx(colorDef.hex, scale);
+        if (inv) { idx = scale.length - 1 - idx; if (idx < 0) idx = 0; }
+        baseCk = ck; baseIdx = idx; baseScale = scale;
+      } else {
+        baseCk = ck; baseIdx = null;
+      }
     }
 
     /* base-higher / base-lower: ±1 core step from resolved base */
@@ -546,7 +534,7 @@ function _exportTokensImpl() {
     },
   };
 
-  /* ── Shared color helpers (used by brand/accent, feedback, combo, HC) ── */
+  /* ── Shared color helpers (used by brand/accent, feedback, combo) ── */
 
   /* Resolve themed/inverted indices from a brand index and scale */
   function resolveThemedInvertedIdx(hex, scale) {
@@ -554,9 +542,16 @@ function _exportTokensImpl() {
     let mirrorIdx = scale.length - 1 - brandIdx;
     if (mirrorIdx === brandIdx) mirrorIdx = Math.min(scale.length - 1, brandIdx + 1);
     const brandIsLight = fgPrimary(scale[brandIdx].hex) === FOUNDATION.darkClear.hex;
-    const themedIdx   = brandIsLight ? brandIdx   : mirrorIdx;
-    const invertedIdx = brandIsLight ? mirrorIdx  : brandIdx;
-    return { themedIdx, invertedIdx, themedCp: FOUNDATION.darkClear.hex, invertedCp: FOUNDATION.lightClear.hex };
+    let themedIdx   = brandIsLight ? brandIdx   : mirrorIdx;
+    let invertedIdx = brandIsLight ? mirrorIdx  : brandIdx;
+    const themedCpHex   = FOUNDATION.darkClear.hex;
+    const invertedCpHex = FOUNDATION.lightClear.hex;
+    /* Ensure AA (>= 4.5:1) between base and contrast-primary for both modes.
+       Themed cp is dark → move base toward lighter (lower index) for more contrast.
+       Inverted cp is light → move base toward darker (higher index) for more contrast. */
+    while (themedIdx > 0 && contrastRatio(scale[themedIdx].hex, themedCpHex) < 4.5) themedIdx--;
+    while (invertedIdx < scale.length - 1 && contrastRatio(scale[invertedIdx].hex, invertedCpHex) < 4.5) invertedIdx++;
+    return { themedIdx, invertedIdx, themedCp: themedCpHex, invertedCp: invertedCpHex };
   }
 
   /* Walk from idx toward darker/lighter until AA/AAA against foundation cloudy */
@@ -600,19 +595,15 @@ function _exportTokensImpl() {
     };
   }
 
-  /* Build a full color set (base, contrast, with-on-foundation, surface) */
+  /* Build a full color set (base, contrast-primary/secondary, with-on-foundation, surface+contrast) — 9 tokens */
   function buildColorSet(idx, cpHex, isLight, scale, ck) {
     const baseStep = scale[idx].step;
-    const hIdx = Math.max(0, idx - 1);
-    const lIdx = Math.min(scale.length - 1, idx + 1);
     const cpRef = hexToOklch(cpHex).L > 0.6 ? '{core.color.light.clear}' : '{core.color.dark.clear}';
     const ct2 = contrastTinted(scale[idx].hex, scale, cpHex);
     const csRef = ct2.fromScale ? `{core.color.${ck}.${closestStep(ct2.hex, scale)}}` : cpRef;
     return {
       tokens: {
         base: col(`{core.color.${ck}.${baseStep}}`),
-        'base-higher': col(`{core.color.${ck}.${scale[hIdx].step}}`),
-        'base-lower': col(`{core.color.${ck}.${scale[lIdx].step}}`),
         'contrast-primary': col(cpRef),
         'contrast-secondary': col(csRef),
         ...buildWithOnFoundation(idx, scale, ck),
@@ -649,31 +640,27 @@ function _exportTokensImpl() {
     /* Use configured shade index, or derive from the color's current hex */
     const bgIdx = c.bgShade ?? closestIdx(bgColor.hex, bgScale);
     const fgIdx = c.fgShade ?? closestIdx(fgColor.hex, fgScale);
-    const bgStep    = bgScale[bgIdx]?.step || '500';
-    const bgHigher  = bgScale[Math.max(0, bgIdx - 1)]?.step || bgStep;
-    const bgLower   = bgScale[Math.min(bgScale.length - 1, bgIdx + 1)]?.step || bgStep;
-    const fgStep    = fgScale[fgIdx]?.step || '500';
-    const fgHigher  = fgScale[Math.max(0, fgIdx - 1)]?.step || fgStep;
-    const fgLower   = fgScale[Math.min(fgScale.length - 1, fgIdx + 1)]?.step || fgStep;
-    const bgHex = bgScale[bgIdx]?.hex || bgColor.hex;
-    const fgHex = fgScale[fgIdx]?.hex || fgColor.hex;
+    const bgStep = bgScale[bgIdx]?.step || '500';
+    const fgStep = fgScale[fgIdx]?.step || '500';
+    const bgHex  = bgScale[bgIdx]?.hex  || bgColor.hex;
+    const fgHex  = fgScale[fgIdx]?.hex  || fgColor.hex;
+    const bgIsLight = hexToOklch(bgHex).L > 0.6;
+    const fgIsLight = hexToOklch(fgHex).L > 0.6;
 
     semantic.color[c.id] = {
       themed: {
-        base:                col(`{core.color.${bgCK}.${bgStep}}`),
-        'base-higher':       col(`{core.color.${bgCK}.${bgHigher}}`),
-        'base-lower':        col(`{core.color.${bgCK}.${bgLower}}`),
-        'contrast-primary':  col(contrastRef(bgHex)),
+        base:                 col(`{core.color.${bgCK}.${bgStep}}`),
+        'contrast-primary':   col(contrastRef(bgHex)),
         'contrast-secondary': col(`{core.color.${fgCK}.${fgStep}}`),
         ...buildWithOnFoundation(bgIdx, bgScale, bgCK),
+        ...buildSurfaceTokens(bgIsLight, bgScale, bgCK),
       },
       inverted: {
-        base:                col(`{core.color.${fgCK}.${fgStep}}`),
-        'base-higher':       col(`{core.color.${fgCK}.${fgHigher}}`),
-        'base-lower':        col(`{core.color.${fgCK}.${fgLower}}`),
-        'contrast-primary':  col(contrastRef(fgHex)),
+        base:                 col(`{core.color.${fgCK}.${fgStep}}`),
+        'contrast-primary':   col(contrastRef(fgHex)),
         'contrast-secondary': col(`{core.color.${bgCK}.${bgStep}}`),
         ...buildWithOnFoundation(fgIdx, fgScale, fgCK),
+        ...buildSurfaceTokens(fgIsLight, fgScale, fgCK),
       },
     };
   });
@@ -693,12 +680,6 @@ function _exportTokensImpl() {
       inverted: invertedSet.tokens,
     };
   });
-
-  /* ── Semantic grid ── */
-  /* Grid references core.space tokens (4 breakpoints matching production skill) */
-  /* Grid references core.space by integer index: M=4, S=3, L=5, XL=6, 2XL=7, 3XL=8 */
-  semantic.grid.margin = { XS: spRef('M'), S: spRef('XL'), M: spRef('2XL'), L: spRef('3XL') };
-  semantic.grid.gutter = { XS: spRef('S'), S: spRef('M'), M: spRef('L'), L: spRef('L') };
 
   /* ================================================================
      DARK MODE OVERRIDES (semantic.tokens.theme-dark.json)
@@ -789,13 +770,13 @@ function _exportTokensImpl() {
      - Default: reads ACTION_STATE (user-configured colorSource, variant, I/S/T)
      - Themed: foundation themed colors (black on light, white on dark)
      - Inverted: foundation inverted colors (white on light, black on dark)
-     Themed/Inverted use canonicalVariant (Primary=solid, Secondary=outline, Tertiary=ghost).
+     Themed/Inverted inherit the variant from the Default set (state.variant).
      ================================================================ */
 
   /* Build Default set from ACTION_STATE — references semantic.color.action tokens.
      The action tokens already have the I/S/T modifiers resolved:
      base = background color, contrast = foreground color.
-     Variant comes from state.variant (user-configured), NOT canonicalVariant.
+     Variant comes from state.variant (user-configured).
      Solid: bg = action base, fg = action contrast.
      Outline: bg = transparent, fg = action base, border = action base.
      Ghost: bg = transparent, fg = action base, border = transparent. */
@@ -822,12 +803,11 @@ function _exportTokensImpl() {
     defaultSet[state.id] = { bg, fg, 'border-color': borderColor, 'border-width': ref(`{semantic.border.width.${bwName}}`) };
   });
 
-  /* Build Themed + Inverted sets: foundation colors, canonical variant per button.
-     Primary=solid, Secondary=outline, Tertiary=ghost — always, regardless of UI state. */
+  /* Build Themed + Inverted sets: foundation colors, variant inherited from Default set. */
   const themedSet = {};
   const invSet = {};
   ACTION_STATE.forEach(state => {
-    const variant = canonicalVariant(state);
+    const variant = state.variant;
     const cpTh  = '{semantic.color.foundation.themed.contrast-primary}';
     const bgTh  = '{semantic.color.foundation.themed.base-clear}';
     const cpInv = '{semantic.color.foundation.inverted.contrast-primary}';
@@ -889,8 +869,8 @@ function _exportTokensImpl() {
       size: {
         S: {
           height:              ref('{semantic.size.action.S}'),
-          'padding-x':         ref('{semantic.space.padding.M}'),
-          'gap-icon-to-label': ref('{semantic.space.gap.XS}'),
+          'padding-x':         ref('{semantic.space.M}'),
+          'gap-icon-to-label': ref('{semantic.space.XS}'),
           icon:                ref('{semantic.size.icon.S}'),
           typography:          ref('{semantic.typography.interface.XS}'),
           'border-radius':     ref('{semantic.radius.M}'),
@@ -898,8 +878,8 @@ function _exportTokensImpl() {
         },
         M: {
           height:              ref('{semantic.size.action.M}'),
-          'padding-x':         ref('{semantic.space.padding.M}'),
-          'gap-icon-to-label': ref('{semantic.space.gap.XS}'),
+          'padding-x':         ref('{semantic.space.M}'),
+          'gap-icon-to-label': ref('{semantic.space.XS}'),
           icon:                ref('{semantic.size.icon.M}'),
           typography:          ref('{semantic.typography.interface.S}'),
           'border-radius':     ref('{semantic.radius.M}'),
@@ -930,8 +910,8 @@ function _exportTokensImpl() {
       size: {
         S: {
           height:              ref('{semantic.size.action.S}'),
-          'padding-x':         ref('{semantic.space.padding.S}'),
-          'gap-icon-to-value': ref('{semantic.space.gap.XS}'),
+          'padding-x':         ref('{semantic.space.S}'),
+          'gap-icon-to-value': ref('{semantic.space.XS}'),
           'typography-value':  ref('{semantic.typography.interface.XS}'),
           'typography-label':  ref('{semantic.typography.interface.XS}'),
           'border-radius':     ref('{semantic.radius.M}'),
@@ -939,8 +919,8 @@ function _exportTokensImpl() {
         },
         M: {
           height:              ref('{semantic.size.action.M}'),
-          'padding-x':         ref('{semantic.space.padding.S}'),
-          'gap-icon-to-value': ref('{semantic.space.gap.XS}'),
+          'padding-x':         ref('{semantic.space.S}'),
+          'gap-icon-to-value': ref('{semantic.space.XS}'),
           'typography-value':  ref('{semantic.typography.interface.S}'),
           'typography-label':  ref('{semantic.typography.interface.XS}'),
           'border-radius':     ref('{semantic.radius.M}'),
@@ -964,11 +944,11 @@ function _exportTokensImpl() {
         placeholder:  ref('{core.color.placeholder}'),
       },
       space: {
-        'padding-x':            ref('{semantic.space.padding.M}'),
-        'padding-y':            ref('{semantic.space.padding.M}'),
-        'gap-eyebrow-to-title': ref('{semantic.space.gap.XS}'),
-        'gap-title-to-body':    ref('{semantic.space.gap.M}'),
-        'gap-body-to-meta':     ref('{semantic.space.gap.L}'),
+        'padding-x':            ref('{semantic.space.M}'),
+        'padding-y':            ref('{semantic.space.M}'),
+        'gap-eyebrow-to-title': ref('{semantic.space.XS}'),
+        'gap-title-to-body':    ref('{semantic.space.M}'),
+        'gap-body-to-meta':     ref('{semantic.space.L}'),
       },
       'border-width':  ref('{semantic.border.width.none}'),
       'border-radius': ref('{semantic.radius.L}'),
@@ -990,17 +970,17 @@ function _exportTokensImpl() {
        ================================================================ */
     article: {
       space: {
-        'wrapper-padding-top':    ref('{semantic.space.article.M}'),
-        'h2-margin-before':       ref('{semantic.space.article.XL}'),
-        'h3-margin-before':       ref('{semantic.space.article.L}'),
-        'h4-margin-before':       ref('{semantic.space.article.M}'),
-        'paragraph-margin-before': ref('{semantic.space.article.S}'),
-        'list-margin-before':     ref('{semantic.space.article.S}'),
-        'list-item-margin-before': ref('{semantic.space.article.XS}'),
-        'media-margin-before':    ref('{semantic.space.article.L}'),
-        'media-caption-margin-before': ref('{semantic.space.article.XS}'),
-        'blockquote-margin-before': ref('{semantic.space.article.L}'),
-        'codeblock-margin-before': ref('{semantic.space.article.M}'),
+        'wrapper-padding-top':    ref('{semantic.space.M}'),
+        'h2-margin-before':       ref('{semantic.space.XL}'),
+        'h3-margin-before':       ref('{semantic.space.L}'),
+        'h4-margin-before':       ref('{semantic.space.M}'),
+        'paragraph-margin-before': ref('{semantic.space.S}'),
+        'list-margin-before':     ref('{semantic.space.S}'),
+        'list-item-margin-before': ref('{semantic.space.XS}'),
+        'media-margin-before':    ref('{semantic.space.L}'),
+        'media-caption-margin-before': ref('{semantic.space.XS}'),
+        'blockquote-margin-before': ref('{semantic.space.L}'),
+        'codeblock-margin-before': ref('{semantic.space.M}'),
       },
     },
   };
@@ -1010,7 +990,6 @@ function _exportTokensImpl() {
      ================================================================ */
 
   const optBreakpoints = document.getElementById('export-breakpoints')?.checked;
-  const optContrast    = document.getElementById('export-contrast')?.checked;
   const optDensity     = document.getElementById('export-density')?.checked;
   const optColors      = document.getElementById('export-colors')?.checked;
 
@@ -1044,258 +1023,6 @@ function _exportTokensImpl() {
 
       breakpointModes[bp] = mode;
     });
-  }
-
-  /* ── Accessibility: High Contrast (AAA 7:1 — override tokens that don't meet AAA) ── */
-  let contrastHighContrast = null;
-  if (optContrast) {
-    contrastHighContrast = { color: { foundation: { themed: {}, inverted: {} } } };
-    /* Foundation HC: reference the AAA alpha tokens from Core (no hardcoded hex) */
-    contrastHighContrast.color.foundation.themed['contrast-secondary'] = col(`{core.color.dark.clear-a${_dN.secondaryAAA}}`);
-    contrastHighContrast.color.foundation.inverted['contrast-secondary'] = col(`{core.color.light.clear-a${_lN.secondaryAAA}}`);
-
-    /* ── Helper: shift baseIdx away from cp until AAA contrast is met ── */
-    function hcShiftBase(baseIdx, cpHex, scale) {
-      if (contrastRatio(cpHex, scale[baseIdx].hex) >= AAA) return baseIdx;
-      const cpIsLight = hexToOklch(cpHex).L > 0.6;
-      let idx = baseIdx;
-      if (cpIsLight) {
-        while (idx < scale.length - 1 && contrastRatio(cpHex, scale[idx].hex) < AAA) idx++;
-      } else {
-        while (idx > 0 && contrastRatio(cpHex, scale[idx].hex) < AAA) idx--;
-      }
-      return idx;
-    }
-
-    /* ── Helper: walk scale from startIdx toward cp direction until threshold met vs bgHex ── */
-    function hcWalkScale(bgHex, scale, cpHex, threshold) {
-      const bgL = hexToOklch(bgHex).L;
-      const cpL = hexToOklch(cpHex).L;
-      const towardDark = cpL < bgL;
-      const candidates = scale
-        .map(s => ({ hex: s.hex, step: s.step, ratio: contrastRatio(s.hex, bgHex), L: s.L }))
-        .filter(s => {
-          if (s.ratio < threshold) return false;
-          if (Math.abs(s.L - bgL) < 0.05) return false;
-          return towardDark ? s.L < bgL : s.L > bgL;
-        });
-      if (!candidates.length) return null;
-      /* Pick minimum passing ratio = closest to base = most tinted */
-      candidates.sort((a, b) => a.ratio - b.ratio);
-      return candidates[0];
-    }
-
-    /* ── Helper: collect only tokens whose $value differs from origTokens ── */
-    function diffTokens(newTokens, origTokens) {
-      const diff = {};
-      for (const [k, v] of Object.entries(newTokens)) {
-        if (!origTokens[k] || JSON.stringify(v) !== JSON.stringify(origTokens[k])) {
-          diff[k] = v;
-        }
-      }
-      return diff;
-    }
-
-    /* ── Generic HC set builder (works for brand, accent, feedback) ── */
-    function hcBuildSet(origIdx, cpHex, isLight, scale, coreKey) {
-      /* 1. Shift base until contrast-primary vs base >= 7:1 */
-      const baseIdx = hcShiftBase(origIdx, cpHex, scale);
-      const baseHex = scale[baseIdx].hex;
-
-      /* cpRef never changes — always the same foundation reference */
-      const cpRef = hexToOklch(cpHex).L > 0.6 ? '{core.color.light.clear}' : '{core.color.dark.clear}';
-
-      /* 2. contrast-secondary: walk from (shifted) base toward cp until >= 7:1 vs base */
-      const csWalk = hcWalkScale(baseHex, scale, cpHex, AAA);
-      const newCsRef = csWalk ? `{core.color.${coreKey}.${csWalk.step}}` : cpRef;
-
-      /* 3. with-light-primary: walk from base toward dark until >= 7:1 vs light.cloudy */
-      let wlPri = null;
-      for (let i = baseIdx; i < scale.length; i++) {
-        if (contrastRatio(scale[i].hex, lightCloudyHex) >= AAA) { wlPri = scale[i].step; break; }
-      }
-      if (!wlPri) wlPri = scale[scale.length - 1].step;
-
-      /* 4. with-light-secondary: walk from base toward dark until >= 4.5:1 vs light.cloudy */
-      let wlSec = null;
-      for (let i = baseIdx; i < scale.length; i++) {
-        if (contrastRatio(scale[i].hex, lightCloudyHex) >= AA) { wlSec = scale[i].step; break; }
-      }
-      if (!wlSec) wlSec = scale[scale.length - 1].step;
-
-      /* 5. with-dark-primary: walk from base toward light until >= 7:1 vs dark.cloudy */
-      let wdPri = null;
-      for (let i = baseIdx; i >= 0; i--) {
-        if (contrastRatio(scale[i].hex, darkCloudyHex) >= AAA) { wdPri = scale[i].step; break; }
-      }
-      if (!wdPri) wdPri = scale[0].step;
-
-      /* 6. with-dark-secondary: walk from base toward light until >= 4.5:1 vs dark.cloudy */
-      let wdSec = null;
-      for (let i = baseIdx; i >= 0; i--) {
-        if (contrastRatio(scale[i].hex, darkCloudyHex) >= AA) { wdSec = scale[i].step; break; }
-      }
-      if (!wdSec) wdSec = scale[0].step;
-
-      /* 7. surface-contrast: surface = step 100 (idx 1) for themed, step 700 (idx 7) for inverted */
-      const surfIdx = isLight ? 1 : Math.min(scale.length - 1, 7);
-      const surfStep = scale[surfIdx].step;
-      const surfHex = scale[surfIdx].hex;
-      let scIdx = surfIdx;
-      if (isLight) {
-        while (scIdx < scale.length - 1 && contrastRatio(scale[scIdx].hex, surfHex) < AAA) scIdx++;
-      } else {
-        while (scIdx > 0 && contrastRatio(scale[scIdx].hex, surfHex) < AAA) scIdx--;
-      }
-
-      /* Assemble new HC tokens */
-      const newHIdx = Math.max(0, baseIdx - 1);
-      const newLIdx = Math.min(scale.length - 1, baseIdx + 1);
-      const newTokens = {
-        base:                 col(`{core.color.${coreKey}.${scale[baseIdx].step}}`),
-        'base-higher':        col(`{core.color.${coreKey}.${scale[newHIdx].step}}`),
-        'base-lower':         col(`{core.color.${coreKey}.${scale[newLIdx].step}}`),
-        'contrast-secondary': col(newCsRef),
-        'with-light-primary':   col(`{core.color.${coreKey}.${wlPri}}`),
-        'with-light-secondary': col(`{core.color.${coreKey}.${wlSec}}`),
-        'with-dark-primary':    col(`{core.color.${coreKey}.${wdPri}}`),
-        'with-dark-secondary':  col(`{core.color.${coreKey}.${wdSec}}`),
-        surface:              col(`{core.color.${coreKey}.${surfStep}}`),
-        'surface-contrast':   col(`{core.color.${coreKey}.${scale[scIdx].step}}`),
-      };
-
-      /* Reconstruct original tokens via buildColorSet */
-      const origTokens = buildColorSet(origIdx, cpHex, isLight, scale, coreKey).tokens;
-
-      /* Only include tokens that actually changed */
-      return diffTokens(newTokens, origTokens);
-    }
-
-    /* ── Action buttons (solid only — ghost/outline have transparent bg, no contrast to fix) ── */
-    ACTION_STATE.forEach(state => {
-      const isFreeform = state.fgSource || state.bgSource;
-      const key = canonicalKey(state.colorSource);
-      const variant = canonicalVariant(state);
-      if (isFreeform || key.startsWith('combo-') || variant !== 'solid') return;
-
-      const palette = allBrandAccent;
-      const colorDef = palette.find(c => c.key === key);
-      if (!colorDef) return;
-
-      const scale = getScale(colorDef.hex);
-      const ck = coreKey(key);
-      const { themedIdx: actThemedIdx, invertedIdx: actInvertedIdx, themedCp: themedCpHex, invertedCp: invCpHex } = resolveThemedInvertedIdx(colorDef.hex, scale);
-
-      const themedBaseHex = scale[actThemedIdx].hex;
-      const invBaseHex = scale[actInvertedIdx].hex;
-
-      const themedNeedsHc  = contrastRatio(themedCpHex, themedBaseHex) < AAA;
-      const invertedNeedsHc = contrastRatio(invCpHex, invBaseHex) < AAA;
-
-      if (!themedNeedsHc && !invertedNeedsHc) return;
-
-      contrastHighContrast.color.action = contrastHighContrast.color.action || {};
-      contrastHighContrast.color.action[state.id] = {};
-
-      if (themedNeedsHc) {
-        /* Shift base toward lighter end until AAA met against dark.clear */
-        const shiftedIdx = hcShiftBase(actThemedIdx, themedCpHex, scale);
-        const newBase = scale[shiftedIdx].step;
-        const origBase = scale[actThemedIdx].step;
-        const diff = {};
-        if (newBase !== origBase) {
-          diff.base = col(`{core.color.${ck}.${newBase}}`);
-          diff['base-higher'] = col(`{core.color.${ck}.${scale[Math.max(0, shiftedIdx - 1)].step}}`);
-          diff['base-lower'] = col(`{core.color.${ck}.${scale[Math.min(scale.length - 1, shiftedIdx + 1)].step}}`);
-        }
-        if (Object.keys(diff).length) contrastHighContrast.color.action[state.id].themed = diff;
-      }
-
-      if (invertedNeedsHc) {
-        /* Shift base toward darker end until AAA met against light.clear */
-        const shiftedIdx = hcShiftBase(actInvertedIdx, invCpHex, scale);
-        const newBase = scale[shiftedIdx].step;
-        const origBase = scale[actInvertedIdx].step;
-        const diff = {};
-        if (newBase !== origBase) {
-          diff.base = col(`{core.color.${ck}.${newBase}}`);
-          diff['base-higher'] = col(`{core.color.${ck}.${scale[Math.max(0, shiftedIdx - 1)].step}}`);
-          diff['base-lower'] = col(`{core.color.${ck}.${scale[Math.min(scale.length - 1, shiftedIdx + 1)].step}}`);
-        }
-        if (Object.keys(diff).length) contrastHighContrast.color.action[state.id].inverted = diff;
-      }
-
-      if (!Object.keys(contrastHighContrast.color.action[state.id]).length) delete contrastHighContrast.color.action[state.id];
-    });
-
-    /* ── Brand/Accent colors ── */
-    allBrandAccent.forEach(c => {
-      const scale = getScale(c.hex);
-      const { themedIdx, invertedIdx, themedCp, invertedCp } = resolveThemedInvertedIdx(c.hex, scale);
-
-      const themedDiff = hcBuildSet(themedIdx, themedCp, true, scale, c.key);
-      const invertedDiff = hcBuildSet(invertedIdx, invertedCp, false, scale, c.key);
-      if ((themedDiff && Object.keys(themedDiff).length) || (invertedDiff && Object.keys(invertedDiff).length)) {
-        contrastHighContrast.color[c.key] = {};
-        if (themedDiff && Object.keys(themedDiff).length) contrastHighContrast.color[c.key].themed = themedDiff;
-        if (invertedDiff && Object.keys(invertedDiff).length) contrastHighContrast.color[c.key].inverted = invertedDiff;
-      }
-    });
-
-    /* ── Feedback colors ── */
-    COLORS.feedback.forEach(c => {
-      const scale = getScale(c.hex);
-      const paletteName = coreKey(c.key);
-      const { themedIdx, invertedIdx, themedCp, invertedCp } = resolveThemedInvertedIdx(c.hex, scale);
-
-      const themedDiff = hcBuildSet(themedIdx, themedCp, true, scale, paletteName);
-      const invertedDiff = hcBuildSet(invertedIdx, invertedCp, false, scale, paletteName);
-      if ((themedDiff && Object.keys(themedDiff).length) || (invertedDiff && Object.keys(invertedDiff).length)) {
-        contrastHighContrast.color.feedback = contrastHighContrast.color.feedback || {};
-        contrastHighContrast.color.feedback[c.key] = {};
-        if (themedDiff && Object.keys(themedDiff).length) contrastHighContrast.color.feedback[c.key].themed = themedDiff;
-        if (invertedDiff && Object.keys(invertedDiff).length) contrastHighContrast.color.feedback[c.key].inverted = invertedDiff;
-        if (!Object.keys(contrastHighContrast.color.feedback[c.key]).length) delete contrastHighContrast.color.feedback[c.key];
-      }
-    });
-
-    /* ── Destructive (red palette) ── */
-    if (redScale.length) {
-      function hcDestructiveSet(origIdx) {
-        const cpHex = fgPrimary(redScale[origIdx].hex);
-        const shiftedIdx = hcShiftBase(origIdx, cpHex, redScale);
-
-        const origHIdx = Math.max(0, origIdx - 1);
-        const origLIdx = Math.min(redScale.length - 1, origIdx + 1);
-        const origTokens = {
-          base:          col(`{core.color.${redPaletteName}.${redScale[origIdx].step}}`),
-          'base-higher': col(`{core.color.${redPaletteName}.${redScale[origHIdx].step}}`),
-          'base-lower':  col(`{core.color.${redPaletteName}.${redScale[origLIdx].step}}`),
-          contrast:      col(contrastRef(redScale[origIdx].hex)),
-        };
-
-        const newHIdx = Math.max(0, shiftedIdx - 1);
-        const newLIdx = Math.min(redScale.length - 1, shiftedIdx + 1);
-        const newTokens = {
-          base:          col(`{core.color.${redPaletteName}.${redScale[shiftedIdx].step}}`),
-          'base-higher': col(`{core.color.${redPaletteName}.${redScale[newHIdx].step}}`),
-          'base-lower':  col(`{core.color.${redPaletteName}.${redScale[newLIdx].step}}`),
-          contrast:      col(contrastRef(redScale[shiftedIdx].hex)),
-        };
-
-        return diffTokens(newTokens, origTokens);
-      }
-
-      const destrThemedDiff = hcDestructiveSet(redOrigThemedIdx);
-      const destrInvDiff = hcDestructiveSet(redOrigInvIdx);
-      if ((destrThemedDiff && Object.keys(destrThemedDiff).length) || (destrInvDiff && Object.keys(destrInvDiff).length)) {
-        contrastHighContrast.color.action = contrastHighContrast.color.action || {};
-        contrastHighContrast.color.action.destructive = {};
-        if (destrThemedDiff && Object.keys(destrThemedDiff).length) contrastHighContrast.color.action.destructive.themed = destrThemedDiff;
-        if (destrInvDiff && Object.keys(destrInvDiff).length) contrastHighContrast.color.action.destructive.inverted = destrInvDiff;
-        if (!Object.keys(contrastHighContrast.color.action.destructive).length) delete contrastHighContrast.color.action.destructive;
-      }
-    }
   }
 
   /* ── Density: Compact (space ×0.75, size ×0.75 per group, integer snap, monotonic) ── */
@@ -1353,37 +1080,25 @@ function _exportTokensImpl() {
     });
   }
 
-  /* ── Download ── */
-  function downloadJson(obj, filename) {
-    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 200);
-  }
-
-  let delay = 0;
-  const dl = (obj, name) => { setTimeout(() => downloadJson(obj, name), delay); delay += 150; };
+  /* ── Build ZIP ── */
+  const zip = new JSZip();
+  const addJson = (obj, name) => zip.file(name, JSON.stringify(obj, null, 2));
 
   /* Base exports (always) */
-  dl(core, 'core.tokens.json');
-  dl(semantic, 'semantic.tokens.json');
-  dl(dark, 'semantic.theme.dark.tokens.json');
-  dl({ component }, 'component.tokens.json');
+  addJson(core, 'core.tokens.json');
+  addJson(semantic, 'semantic.tokens.json');
+  addJson(dark, 'semantic.theme.dark.tokens.json');
+  addJson({ component }, 'component.tokens.json');
 
   /* Optional collections */
   if (breakpointModes) {
     Object.entries(breakpointModes).forEach(([bp, obj]) => {
-      dl(obj, `core.breakpoint.${bp.toLowerCase()}.tokens.json`);
+      addJson(obj, `core.breakpoint.${bp.toLowerCase()}.tokens.json`);
     });
   }
-  if (contrastHighContrast) dl(contrastHighContrast, 'semantic.accessibility.high-contrast.tokens.json');
-  if (densityCompact) dl(densityCompact, 'core.density.compact.tokens.json');
+  if (densityCompact) addJson(densityCompact, 'core.density.compact.tokens.json');
   if (document.getElementById('export-typography')?.checked) {
-    dl({
+    addJson({
       core: {
         font: {
           'family-sans':      { $value: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif", $type: 'fontFamily' },
@@ -1402,7 +1117,7 @@ function _exportTokensImpl() {
   }
   if (colorCollections) {
     Object.entries(colorCollections).forEach(([key, obj]) => {
-      dl(obj, `semantic.colors.${key}.tokens.json`);
+      addJson(obj, `semantic.colors.${key}.tokens.json`);
     });
   }
 
@@ -1421,7 +1136,6 @@ function _exportTokensImpl() {
   /* Resolve order */
   h2('Resolve Order');
   const layers = ['Core', 'Semantic (Light/Dark)'];
-  if (optContrast) layers.push('Accessibility (High Contrast)');
   if (optColors) layers.push('Color Collections');
   layers.push('Component');
   code(layers.join(' → '));
@@ -1440,7 +1154,6 @@ function _exportTokensImpl() {
   p('The implementation tool determines how chaining works (CSS cascade, Figma variable aliases, Style Dictionary source file order). Read the relevant Tool Conventions (`~/.claude/resources/Tool Conventions/`) for platform-specific implementation details.');
   archLines.push('');
   const chainStack = ['Semantic'];
-  if (optContrast) chainStack.push('Accessibility');
   if (optColors) chainStack.push('Color Collections');
   chainStack.push('Component');
   archLines.push('| Layer | References |');
@@ -1468,9 +1181,7 @@ function _exportTokensImpl() {
   p('**Modes:** themed, inverted. Overrides semantic.tokens.json.');
 
   h3('component.tokens.json');
-  let componentTarget = 'semantic';
-  if (optColors) componentTarget = 'Color Collection';
-  else if (optContrast) componentTarget = 'Accessibility';
+  const componentTarget = optColors ? 'Color Collection' : 'semantic';
   p('Component-scoped tokens (button, input, card, etc.). References ' + componentTarget + ' tokens — never core directly. JSON files use logical references (`{semantic.*}`), but the implementation tool builds the alias chain through intermediate collections when present (see Reference Chain above).');
 
   /* Optional: Typography */
@@ -1508,56 +1219,16 @@ function _exportTokensImpl() {
     p('**Component switching:** S = Mobile, M+ = Desktop. Use these modes to switch component variants (e.g. mobile nav → desktop nav).');
   }
 
-  /* Optional: Accessibility only */
-  if (optContrast && !optColors) {
-    h2('Accessibility Collection');
-    h3('semantic.accessibility.high-contrast.tokens.json');
-    p('Overrides `contrast-secondary` shade assignments for brand, accent, and feedback colors. Selects shades that meet WCAG AAA (7:1) contrast ratio instead of AA (4.5:1).');
-    p('**Implementation:** Load after semantic.tokens.json. Overrides the same `semantic.color.*.themed.contrast-secondary` and `.inverted.contrast-secondary` keys with higher-contrast shade references. All downstream component tokens resolve automatically.');
-  }
-
-  /* Optional: Colors only */
-  if (optColors && !optContrast) {
+  /* Optional: Colors */
+  if (optColors) {
     h2('Color Collections');
     p('Each brand, accent, and combo color is exported as a separate switchable collection:');
     Object.keys(colorCollections).forEach(key => {
       li('`semantic.colors.' + key + '.tokens.json`');
     });
     archLines.push('');
-    p('Each file contains `semantic.color.[key].themed.*` and `.inverted.*` — the full set of base, base-higher, base-lower, contrast-primary, and contrast-secondary assignments.');
-    p('**Implementation:** These are alternative semantic sets. In Figma, create a variable collection per color with modes "themed" and "inverted". Components referencing `semantic.color.[key].*` will resolve to whichever collection is active.');
-  }
-
-  /* Optional: Colors + Accessibility combined */
-  if (optColors && optContrast) {
-    h2('Accessibility + Color Collections (Combined)');
-
-    h3('Resolve Order With Both Active');
-    code('Core → Semantic (Light/Dark) → Accessibility (High Contrast) → Color Collections → Component');
-    p('High Contrast sits BETWEEN Semantic and Color Collections. This means:');
-    li('Color Collections reference semantic tokens');
-    li('When HC is active, it overrides the semantic shade assignments');
-    li('Color Collections inherit the HC-adjusted values automatically');
-    archLines.push('');
-
-    h3('semantic.accessibility.high-contrast.tokens.json');
-    p('Overrides `contrast-secondary` shade assignments to meet WCAG AAA (7:1). Applies to all brand, accent, and feedback colors.');
-    p('**Key:** This file overrides semantic tokens. Color Collections that reference these semantic tokens will automatically pick up the HC values when HC is active.');
-
-    h3('Color Collection Files');
-    Object.keys(colorCollections).forEach(key => {
-      li('`semantic.colors.' + key + '.tokens.json`');
-    });
-    archLines.push('');
-    p('Each contains themed + inverted assignments. When HC is also active, the shades referenced by these collections are the HC-adjusted ones.');
-
-    h3('Implementation Note');
-    p('Accessibility MUST resolve before Color Collections in every tool. See the Reference Chain section above for the general principle. Platform-specific details:');
-    li('**Figma:** Create the HC collection before color collections in the variable resolve order');
-    li('**CSS:** Load stylesheets in order — semantic → HC → color collections');
-    li('**Tokens Studio / Style Dictionary:** Set source file order so HC processes first');
-    archLines.push('');
-    p('See Tool Conventions (`~/.claude/resources/Tool Conventions/`) for full implementation guides.');
+    p('Each file contains `semantic.color.[key].themed.*` and `.inverted.*` — the 9-token role set: base, contrast-primary, contrast-secondary, surface, surface-contrast, with-light-primary, with-light-secondary, with-dark-primary, with-dark-secondary.');
+    p('**Implementation:** Create ONE Colors variable collection in Figma. Each brand/accent/combo color becomes a **mode** in that collection (e.g. modes: Brand A, Brand B, Accent A, Accent B, Accent C). All modes contain the same semantic token keys with their respective color values. Apply the Full Proxy Rule: pass through all other semantic color tokens (foundation, feedback, action) as identical aliases in every mode.');
   }
 
   /* ── Parameters (tool state snapshot for reverse intake) ── */
@@ -1601,16 +1272,547 @@ function _exportTokensImpl() {
   archLines.push(`| darkCloudy | ${FOUNDATION.darkCloudy.hex} |`);
   archLines.push('');
 
+  h3('Feedback Colors');
+  archLines.push('| Key | Hex |');
+  archLines.push('|---|---|');
+  for (const c of COLORS.feedback) {
+    archLines.push(`| ${c.key} | ${c.hex} |`);
+  }
+  archLines.push('');
+
+  h3('Design Decisions');
+  archLines.push('| Parameter | Value |');
+  archLines.push('|---|---|');
+  document.querySelectorAll('.export-overlay-radio-row input[type="radio"][name^="dd-"]:checked').forEach(radio => {
+    archLines.push(`| ${radio.name} | ${radio.value} |`);
+  });
+  archLines.push('');
+
   h3('URL Hash');
   p('Paste this after the HTML file path to restore all settings:');
   code(window.location.hash || '(no hash — default values)');
 
-  /* Download architecture file */
-  const archBlob = new Blob([archLines.join('\n')], { type: 'text/markdown' });
-  const archA = document.createElement('a');
-  archA.href = URL.createObjectURL(archBlob);
-  archA.download = 'README.md';
-  archA.style.display = 'none';
-  document.body.appendChild(archA);
-  setTimeout(() => { archA.click(); setTimeout(() => { document.body.removeChild(archA); URL.revokeObjectURL(archA.href); }, 200); }, delay);
+  /* ── DESIGN.md (Google Stitch format) ── */
+  const dLines = [];
+  const dh1 = (t) => dLines.push(`# ${t}`, '');
+  const dh2 = (t) => dLines.push('', '', `## ${t}`, '');
+  const dh3 = (t) => dLines.push('', '', `### ${t}`, '');
+  const dp = (t) => dLines.push(t, '');
+
+  const styleNameVal = document.getElementById('export-style-name').value.trim() || 'Untitled Style';
+  const styleDescVal = document.getElementById('export-style-desc').value.trim();
+
+  dh1('DESIGN.md');
+  dp('> Generated by xd-design-tokens-create');
+  dp('> All values below reflect the current parametric state. Token names reference the exported DTCG files (core.tokens.json, semantic.tokens.json, component.tokens.json).');
+
+  /* Section 0: Context */
+  if (styleDescVal) {
+    dh2('0. Context');
+    dp(styleDescVal);
+  }
+
+  /* Section 1: Visual Theme & Atmosphere — Design Decisions */
+  dh2('1. Visual Theme & Atmosphere');
+  dp('Design decisions that go beyond what design tokens can capture. Only selected decisions are listed — unset parameters are left to the designer\'s judgement.');
+
+  const ddGroups = {};
+  document.querySelectorAll('.export-overlay-radio-row input[type="radio"][name^="dd-"]:checked').forEach(radio => {
+    const group = radio.closest('.export-overlay-group');
+    const groupTitle = group ? group.querySelector('.export-overlay-group-title')?.textContent : 'Other';
+    if (!ddGroups[groupTitle]) ddGroups[groupTitle] = [];
+    const paramTitle = radio.closest('.export-overlay-param')?.querySelector('.export-overlay-param-title')?.textContent || radio.name;
+    const label = radio.parentElement?.textContent?.trim() || radio.value;
+    const desc = radio.dataset.desc || '';
+    ddGroups[groupTitle].push(`- **${paramTitle}:** ${label} — ${desc}`);
+  });
+
+  for (const [group, items] of Object.entries(ddGroups)) {
+    dh3(group);
+    items.forEach(item => dLines.push(item));
+    dLines.push('');
+  }
+
+  /* ── Section 2: Color Palette & Roles ── */
+  dh2('2. Color Palette & Roles');
+  dp('Semantic color assignments with hex values. All colors reference `semantic.tokens.json` roles. Light mode values shown; dark mode inverts foundation pairs automatically.');
+
+  dh3('Foundation');
+  dLines.push(
+    '| Token | Role | Light | Dark |',
+    '|-------|------|-------|------|',
+    `| \`foundation.themed.base-clear\` | Clear light/dark backgrounds | \`${FOUNDATION.lightClear.hex}\` | \`${FOUNDATION.darkClear.hex}\` |`,
+    `| \`foundation.themed.base-cloudy\` | Cloudy light/dark backgrounds | \`${FOUNDATION.lightCloudy.hex}\` | \`${FOUNDATION.darkCloudy.hex}\` |`,
+    `| \`foundation.themed.base-higher\` | Elevated surfaces | \`${FOUNDATION.lightClear.hex}\` | \`${FOUNDATION.darkCloudy.hex}\` |`,
+    `| \`foundation.themed.base-lower\` | Background, base surfaces | \`${FOUNDATION.lightCloudy.hex}\` | \`${FOUNDATION.darkClear.hex}\` |`,
+    `| \`foundation.themed.contrast-primary\` | Primary text, headings | \`${FOUNDATION.darkClear.hex}\` | \`${FOUNDATION.lightClear.hex}\` |`,
+    `| \`foundation.themed.contrast-secondary\` | Secondary text, labels | \`${rgbaBase(_dc, _dN.secondary / 100)}\` | \`${rgbaBase(_lc, _lN.secondary / 100)}\` |`,
+    `| \`foundation.themed.contrast-tertiary\` | Placeholder text, disabled | \`${rgbaBase(_dc, _dN.tertiary / 100)}\` | \`${rgbaBase(_lc, _lN.tertiary / 100)}\` |`,
+    `| \`foundation.themed.focus\` | Focus rings | \`${(COLORS.feedback.find(c => c.key === 'info') || {hex:'#3B82F6'}).hex}\` | (auto) |`,
+    `| \`foundation.themed.dash\` | Dividers, borders | \`${rgbaBase(_dc, _dN.dash / 100)}\` | \`${rgbaBase(_lc, _lN.dash / 100)}\` |`,
+    `| \`foundation.themed.base-shine\` | Subtle highlight overlay | \`${rgbaBase(_lc, 0.10)}\` | \`${rgbaBase(_lc, 0.10)}\` |`,
+    `| \`foundation.themed.base-shade\` | Subtle shadow overlay | \`${rgbaBase(_dc, 0.10)}\` | \`${rgbaBase(_dc, 0.10)}\` |`,
+    ''
+  );
+
+  dh3('Foundation (Inverted)');
+  dp('Inverted tokens swap the theme — light tokens resolve to dark values and vice versa. Used for contrast sections, tooltips, and inverted UI elements.');
+  dLines.push(
+    '| Token | Role | Light | Dark |',
+    '|-------|------|-------|------|',
+    `| \`foundation.inverted.base-clear\` | Clear dark/light backgrounds | \`${FOUNDATION.darkClear.hex}\` | \`${FOUNDATION.lightClear.hex}\` |`,
+    `| \`foundation.inverted.base-cloudy\` | Cloudy dark/light backgrounds | \`${FOUNDATION.darkCloudy.hex}\` | \`${FOUNDATION.lightCloudy.hex}\` |`,
+    `| \`foundation.inverted.contrast-primary\` | Primary text on inverted background | \`${FOUNDATION.lightClear.hex}\` | \`${FOUNDATION.darkClear.hex}\` |`,
+    `| \`foundation.inverted.contrast-secondary\` | Secondary text on inverted background | \`${rgbaBase(_lc, _lN.secondary / 100)}\` | \`${rgbaBase(_dc, _dN.secondary / 100)}\` |`,
+    ''
+  );
+
+  /* Resolve an alias chain {core.color.xxx.step} to a hex via the core scale map */
+  function resolveTokenHex(tokenPath, parentObj) {
+    const parts = tokenPath.split('.');
+    let node = parentObj;
+    for (const p of parts) { if (!node || typeof node !== 'object') return null; node = node[p]; }
+    if (!node) return null;
+    const v = node.$value || node;
+    if (typeof v !== 'string') return null;
+    const m = v.match(/\{core\.color\.([^.]+)\.([^}]+)\}/);
+    if (!m) return v.startsWith('#') ? v : null;
+    const [, ck, step] = m;
+    const scale = core.color?.[ck];
+    if (!scale) return null;
+    const stepNode = scale[step];
+    if (!stepNode) return null;
+    const sv = stepNode.$value || stepNode;
+    return typeof sv === 'string' ? sv : null;
+  }
+
+  const roleOrder = ['base','contrast-primary','contrast-secondary','surface','surface-contrast','with-light-primary','with-light-secondary','with-dark-primary','with-dark-secondary'];
+  const roleUse = {
+    base: 'Brand color base',
+    'contrast-primary': 'Primary text on brand color',
+    'contrast-secondary': 'Secondary text on brand color',
+    surface: 'Light brand color as background',
+    'surface-contrast': 'Dark brand color on surface',
+    'with-light-primary': 'Primary brand color on light foundation',
+    'with-light-secondary': 'Secondary brand color on light foundation',
+    'with-dark-primary': 'Primary brand color on dark foundation',
+    'with-dark-secondary': 'Secondary brand color on dark foundation',
+  };
+
+  function roleTableRowsFor(tokenPrefix, semanticNode) {
+    const rows = [];
+    roleOrder.forEach(role => {
+      const node = semanticNode?.[role];
+      if (!node) return;
+      const v = node.$value || node;
+      const hex = (typeof v === 'string' && v.startsWith('#')) ? v : resolveTokenHex(`color.${tokenPrefix}.themed.${role}`, semantic) || '—';
+      rows.push(`| \`${tokenPrefix}.themed.${role}\` | ${hex} | ${roleUse[role] || ''} |`);
+    });
+    return rows;
+  }
+
+  dh3('Brand Colors');
+  dp('Each brand color generates a full OKLCH 11-step scale (50–950) in `core.tokens.json`. Semantic tokens reference the scale step closest to the defined hex. Each color exposes the full 9-token role set below.');
+  COLORS.brand.forEach(c => {
+    dLines.push(`**${c.name || c.key}** — source \`${c.hex}\``, '');
+    dLines.push('| Token | Hex | Use |', '|-------|-----|-----|');
+    dLines.push(...roleTableRowsFor(c.key, semantic.color[c.key]?.themed));
+    dLines.push('');
+  });
+  dLines.push('Each brand/accent color also has `inverted` variants that swap base and contrast roles for dark-on-light vs. light-on-dark contexts.', '');
+
+  if (COLORS.accent.length > 0) {
+    dh3('Accent Colors');
+    dp('Optional additional colors beyond the brand palette. Same OKLCH scale generation and 9-token role set as brand colors.');
+    COLORS.accent.forEach(c => {
+      dLines.push(`**${c.name || c.key}** — source \`${c.hex}\``, '');
+      dLines.push('| Token | Hex | Use |', '|-------|-----|-----|');
+      dLines.push(...roleTableRowsFor(c.key, semantic.color[c.key]?.themed));
+      dLines.push('');
+    });
+  }
+
+  dh3('Feedback Colors');
+  dp('Semantic status colors. Same 9-token role set as brand/accent.');
+  const feedbackUse = { info: 'Informational messages, links', success: 'Success states, confirmations', warning: 'Warnings, caution states', error: 'Errors, destructive actions' };
+  COLORS.feedback.forEach(c => {
+    dLines.push(`**${c.name || c.key}** (${feedbackUse[c.key] || ''}) — source \`${c.hex}\``, '');
+    dLines.push('| Token | Hex | Use |', '|-------|-----|-----|');
+    dLines.push(...roleTableRowsFor(`feedback.${c.key}`, semantic.color.feedback?.[c.key]?.themed));
+    dLines.push('');
+  });
+
+  dh3('Action Colors');
+  dLines.push(
+    '| Token | Role | Value |',
+    '|-------|------|-------|',
+    '| `action.primary.themed.base` | Primary action background | = `brand-a.themed.base` |',
+    '| `action.primary.themed.contrast` | Primary action text | = `brand-a.themed.contrast-primary` |',
+    '| `action.destructive.themed.base` | Destructive action background | = `feedback.error.themed.base` |',
+    '| `action.destructive.themed.contrast` | Destructive action text | = `feedback.error.themed.contrast-primary` |',
+    ''
+  );
+
+  if (typeof COMBO_STATE !== 'undefined' && COMBO_STATE.length > 0) {
+    dh3('Combo Colors');
+    dp('Pre-configured color pairings for content sections. Each combo assigns a background source + foreground source with specific shade steps. Same 9-token role set as brand/accent.');
+    COMBO_STATE.forEach(c => {
+      dLines.push(`**${c.id}** — bg \`${c.bgSource}\`, fg \`${c.fgSource}\`${c.use ? ' — ' + c.use : ''}`, '');
+      dLines.push('| Token | Hex | Use |', '|-------|-----|-----|');
+      dLines.push(...roleTableRowsFor(c.id, semantic.color[c.id]?.themed));
+      dLines.push('');
+    });
+  }
+
+  /* ── Section 3: Typography Rules ── */
+  dh2('3. Typography Rules');
+  dp('Font families, weights, and the complete type scale. All values reference `core.tokens.json` and `semantic.tokens.json`.');
+
+  dh3('Font Families');
+  dLines.push(
+    '| Token | Stack | Use |',
+    '|-------|-------|-----|',
+    `| \`core.font.family-sans\` | \`${sansStack}\` | ${pairing.startsWith('sans') ? 'Headings' : 'Body/UI'} |`,
+    `| \`core.font.family-serif\` | \`${serifStack}\` | ${pairing.startsWith('serif') ? 'Headings' : 'Display/accent'} |`,
+    `| \`core.font.family-interface\` | (= ${interfaceType}) | UI elements, labels, body |`,
+    `| \`core.font.family-mono\` | \`${monoStack}\` | Code, technical values |`,
+    ''
+  );
+
+  dh3('Font Weights');
+  dLines.push('| Token | Value | Use |', '|-------|-------|-----|');
+  WEIGHT_SCALE.forEach(ws => {
+    let use = '';
+    if (ws.val === w.base) use = 'Body text, paragraphs';
+    else if (ws.val === w.heading) use = 'Headings';
+    else if (ws.val === 300) use = 'Decorative, large display';
+    else if (ws.val === 500) use = 'Subtle emphasis';
+    else if (ws.val === 700) use = 'Strong emphasis';
+    else if (ws.val === 800) use = 'Extra bold emphasis';
+    dLines.push(`| \`core.font.weight-${ws.name}\` | ${ws.val} | ${use} |`);
+  });
+  dLines.push('');
+
+  dh3('Type Scale');
+  dp(`Sizes are parametric (scale hierarchy parameter \`sh\`). Values shown at current \`sh = ${sh}\`. Fixed sizes stay constant regardless of \`sh\`; scaled sizes grow/shrink with the parameter.`);
+  dLines.push('| Token | Category | Size | Fixed | Line Height | Use |', '|-------|----------|------|-------|-------------|-----|');
+  const typoMeta = [
+    { cat: 'heading', sizes: ['2XL','XL','L','M','S'], lh: 'heading', fixed: (s) => s === 'S', uses: { '2XL': 'Page titles, hero headlines', 'XL': 'Section headings', 'L': 'Subsection headings', 'M': 'Card titles, group headers', 'S': 'Small headings, labels' } },
+    { cat: 'interface', sizes: ['XL','L','M','S','XS'], lh: 'interface', fixed: () => true, uses: { 'XL': 'Large UI elements', 'L': 'Navigation, prominent labels', 'M': 'Default body text, buttons', 'S': 'Secondary labels, metadata', 'XS': 'Captions, badges, timestamps' } },
+    { cat: 'paragraph', sizes: ['XL','L','M','S','XS'], lh: 'paragraph', fixed: () => true, uses: { 'XL': 'Lead paragraphs, intros', 'L': 'Featured body text', 'M': 'Default long-form reading', 'S': 'Footnotes, fine print', 'XS': 'Legal text, disclaimers' } },
+    { cat: 'caps', sizes: ['L','M','S'], lh: 'interface', fixed: () => true, uses: { 'L': 'Prominent category labels', 'M': 'Section labels, tab headers', 'S': 'Overlines, label categories' } },
+    { cat: 'code', sizes: ['M'], lh: 'paragraph', fixed: () => true, uses: { 'M': 'Code blocks, token values' } },
+  ];
+  const lhValues = { heading: parseFloat((1.0 * lh).toFixed(2)), interface: parseFloat((1.1 * lh).toFixed(2)), paragraph: parseFloat((1.4 * lh).toFixed(2)) };
+  const dTypoSizeIdx = {
+    'caps.S': 0, 'caps.M': 1, 'caps.L': 2,
+    'interface.XS': 1, 'interface.S': 2, 'interface.M': 3, 'interface.L': 4, 'interface.XL': 5,
+    'paragraph.XS': 1, 'paragraph.S': 2, 'paragraph.M': 3, 'paragraph.L': 4, 'paragraph.XL': 5,
+    'heading.S': 5, 'heading.M': 6, 'heading.L': 7, 'heading.XL': 8, 'heading.2XL': 9,
+    'code.M': 3,
+  };
+  typoMeta.forEach(group => {
+    group.sizes.forEach(size => {
+      const idx = dTypoSizeIdx[`${group.cat}.${size}`];
+      const px = idx != null && typo[idx] ? typo[idx].size : '?';
+      const isFixed = group.fixed(size);
+      dLines.push(`| \`semantic.typography.${group.cat}.${size}\` | ${group.cat.charAt(0).toUpperCase() + group.cat.slice(1)} | ${px}px | ${isFixed ? 'yes' : 'no'} | ${lhValues[group.lh]}× | ${group.uses[size]} |`);
+    });
+  });
+  dLines.push('');
+  dp('**Category semantics:** Interface = compact UI (buttons, labels, nav). Paragraph = reading text (articles, descriptions). Caps = uppercase labels (always letter-spaced). Code = monospaced technical content.');
+
+  dh3('Line Heights');
+  dp('Line-height values are unitless multipliers of font-size. Never use px or %.');
+  dLines.push(
+    '| Token | Value | Use |',
+    '|-------|-------|-----|',
+    `| \`core.font.lineHeight-heading\` | ${lhValues.heading} | Headings — tight |`,
+    `| \`core.font.lineHeight-interface\` | ${lhValues.interface} | UI elements — compact |`,
+    `| \`core.font.lineHeight-paragraph\` | ${lhValues.paragraph} | Reading text — comfortable |`,
+    ''
+  );
+
+  dh3('Paragraph Spacing');
+  dp(`Paragraph spacing is parametric (\`ph\`). At current \`ph = ${ph}\`, the space between paragraphs equals \`16 × ${ph}\` = ${Math.round(16 * ph)}px. This is separate from line height and only applies between block-level text elements.`);
+
+  /* Section 4 (Component Tokens) removed by design: component tokens live in component.tokens.json and are not surfaced in DESIGN.md. */
+  if (false) {
+  dh2('4. Component Tokens');
+  dp('Styling rules for interactive elements. All tokens reference `component.tokens.json`.');
+
+  dh3('Buttons');
+  /* Primary (Solid) */
+  dp('**Primary (Solid)**');
+  const _radM = radius.M != null ? radius.M : 4;
+  const _padM = spacing.find(s => s.name === 'M')?.val || 16;
+  const _padXS = spacing.find(s => s.name === 'XS')?.val || 8;
+  const _bwS = borders.find ? borders[2]?.val || 1 : 1;
+  dLines.push(
+    '| Property | Token | Value |',
+    '|----------|-------|-------|',
+    '| Background | `component.button.primary.themed.bg` | = `action.primary.themed.base` |',
+    '| Text | `component.button.primary.themed.fg` | = `action.primary.themed.contrast` |',
+    `| Border radius | \`component.button.primary.radius\` | = \`semantic.radius.M\` (${_radM}px) |`,
+    `| Padding X | \`component.button.primary.padding-x\` | = \`semantic.space.M\` (${_padM}px) |`,
+    '| Font | `semantic.typography.interface.M` | ' + (typo[3]?.size || 16) + 'px |',
+    '| Disabled | opacity 0.4 | — |',
+    '| Focus | `semantic.elevation.focus` | Focus ring |',
+    ''
+  );
+
+  dp('**Secondary (Outline)**');
+  dLines.push(
+    '| Property | Token | Value |',
+    '|----------|-------|-------|',
+    '| Background | transparent | — |',
+    '| Text | color source base | — |',
+    `| Border width | \`semantic.border.width.M\` | ${borders[3]?.val || 1.5}px |`,
+    '| Border color | color source base | — |',
+    ''
+  );
+
+  dp('**Tertiary (Ghost)**');
+  dLines.push(
+    '| Property | Token | Value |',
+    '|----------|-------|-------|',
+    '| Background | transparent | — |',
+    '| Text | color source base | — |',
+    '| Border | none | — |',
+    ''
+  );
+
+  dh3('Cards');
+  const _radL = radius.L != null ? radius.L : 8;
+  const _padL = spacing.find(s => s.name === 'L')?.val || 24;
+  dLines.push(
+    '| Property | Token | Value |',
+    '|----------|-------|-------|',
+    '| Background | `component.card.themed.bg` | = `foundation.themed.base-cloudy` |',
+    `| Border radius | \`component.card.radius\` | = \`semantic.radius.L\` (${_radL}px) |`,
+    `| Padding | \`component.card.padding\` | = \`semantic.space.L\` (${_padL}px) |`,
+    '| Shadow | `component.card.elevation` | = `semantic.elevation.1` |',
+    `| Border | \`component.card.border-width\` | = \`semantic.border.width.XS\` (${borders[1]?.val || 0.5}px) |`,
+    '| Border color | `component.card.themed.border` | = `foundation.themed.dash` |',
+    ''
+  );
+
+  dh3('Input Fields');
+  const _radMi = radius.M != null ? radius.M : 4;
+  dLines.push(
+    '| Property | Token | Value |',
+    '|----------|-------|-------|',
+    '| Background | `component.input.themed.bg` | = `foundation.themed.base-clear` |',
+    `| Border | \`component.input.border-width\` | = \`semantic.border.width.S\` (${borders[2]?.val || 1}px) |`,
+    '| Border color | `component.input.themed.border` | = `foundation.themed.dash` |',
+    `| Border radius | \`component.input.radius\` | = \`semantic.radius.M\` (${_radMi}px) |`,
+    '| Text | `component.input.themed.fg` | = `foundation.themed.contrast-primary` |',
+    '| Placeholder | `component.input.themed.placeholder` | = `foundation.themed.contrast-tertiary` |',
+    `| Label | \`semantic.typography.interface.S\` | ${typo[2]?.size || 14}px, above field |`,
+    `| Helper | \`semantic.typography.interface.XS\` | ${typo[1]?.size || 12}px, below field |`,
+    '| Focus border | `component.input.themed.focus-border` | = `foundation.themed.focus` |',
+    '| Focus ring | `semantic.elevation.focus` | Focus ring |',
+    '| Error border | `component.input.themed.error-border` | = `feedback.error.themed.base` |',
+    '| Error helper | `component.input.themed.error-text` | = `feedback.error.themed.base` |',
+    ''
+  );
+
+  } /* end of removed Section 4 */
+
+  /* ── Section 4: Layout & Spacing ── */
+  dh2('4. Layout & Spacing');
+  dp('Spacing scale, sizing, radius, and borders. Spacing/sizing snap to a 4px grid; border widths allow 0.5px sub-pixel values.');
+
+  dh3('Spacing Scale');
+  dp(`Parametric via \`space_factor\` (\`sf\`). Values shown at current \`sf = ${sf}\`.`);
+  dLines.push('| Token | Name | Value | Use |', '|-------|------|-------|-----|');
+  const spUse = { '0': 'No spacing', '2XS': 'Tight internal gaps', 'XS': 'Icon gaps, inline spacing', 'S': 'Related element spacing', 'M': 'Default component padding', 'L': 'Group spacing, card padding', 'XL': 'Section spacing', '2XL': 'Major section breaks', '3XL': 'Page section separators' };
+  spacing.forEach(s => {
+    dLines.push(`| \`semantic.space.${s.name}\` | ${s.name} | ${s.val}px | ${spUse[s.name] || ''} |`);
+  });
+  dLines.push('', 'One flat T-shirt scale. Usage (padding, gap, margin) is determined by the consumer — component tokens or layout.', '', 'For page-level whitespace beyond 3XL, use **layout tokens** rather than extending the scale.', '');
+
+  dh3('Sizing Scale');
+  dp(`Parametric via \`dimension_factor\` (\`df\`). Values shown at current \`df = ${df}\`.`);
+  dLines.push('| Token | Name | Value | Use |', '|-------|------|-------|-----|');
+  const szUse = { 'icon.S': 'Inline icons', 'icon.M': 'Default icons', 'icon.L': 'Prominent icons', 'icon.XL': 'Feature icons, illustrations', 'action.XS': 'Compact touch targets', 'action.S': 'Small buttons, tags', 'action.M': 'Default buttons, inputs', 'action.L': 'Prominent actions', 'action.XL': 'Hero CTAs' };
+  sizing.forEach(s => {
+    const [group, size] = s.name.split('.');
+    dLines.push(`| \`semantic.size.${s.name}\` | ${group.charAt(0).toUpperCase() + group.slice(1)} ${size} | ${s.val}px | ${szUse[s.name] || ''} |`);
+  });
+  dLines.push('');
+
+  dh3('Radius Scale');
+  dp(`Parametric via \`roundness_factor\` (\`rf\`). Values snap to the radius scale \`[0, 1, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64]\`. Values shown at current \`rf = ${rf}\`.`);
+  dLines.push('| Token | Name | Value | Use |', '|-------|------|-------|-----|');
+  dLines.push('| `semantic.radius.none` | None | 0px | Sharp corners |');
+  const radUse = { 'S': 'Subtle rounding (badges)', 'M': 'Buttons, inputs, chips', 'L': 'Cards, modals', 'XL': 'Large containers', '2XL': 'Hero sections' };
+  ['S','M','L','XL','2XL'].forEach(k => {
+    if (radius[k] != null) dLines.push(`| \`semantic.radius.${k}\` | ${k} | ${radius[k]}px | ${radUse[k] || ''} |`);
+  });
+  dLines.push('| `semantic.radius.pill` | Pill | 9999px | Pills, tags, full-round |', '');
+
+  dh3('Border Width Scale');
+  dp(`Parametric via \`border_width\` multiplier (\`bw\`). Values shown at current \`bw = ${bw}\`.`);
+  dLines.push('| Token | Name | Value | Use |', '|-------|------|-------|-----|');
+  const bwUse = { 'none': 'No border', 'XS': 'Hairline dividers', 'S': 'Default borders', 'M': 'Emphasized borders', 'L': 'Strong outlines', 'XL': 'Accent borders', '2XL': 'Heavy decorative borders' };
+  borders.forEach(b => {
+    dLines.push(`| \`semantic.border.width.${b.name}\` | ${b.name} | ${b.val}px | ${bwUse[b.name] || ''} |`);
+  });
+  dLines.push('');
+
+  /* ── Section 5: Depth & Elevation ── */
+  dh2('5. Depth & Elevation');
+  dp('Shadow system and surface hierarchy. Shadow colors use foundation dark.clear at computed alpha levels (6%–18%) for consistent depth across themes.');
+  dLines.push(
+    '| Token | Level | Shadow | Use |',
+    '|-------|-------|--------|-----|',
+    '| `semantic.elevation.0` | 0 | none | Flat surfaces |',
+    '| `semantic.elevation.1` | 1 | `0 1px 3px` @12%, `0 1px 2px` @8% | Cards, raised panels |',
+    '| `semantic.elevation.2` | 2 | `0 4px 16px` @12%, `0 1px 4px` @6% | Popovers, dropdowns |',
+    '| `semantic.elevation.3` | 3 | `0 8px 32px` @14%, `0 2px 8px` @8% | Modals, dialogs |',
+    '| `semantic.elevation.4` | 4 | `0 16px 48px` @18%, `0 4px 16px` @10% | Toasts, notifications |',
+    '| `semantic.elevation.focus` | Focus | `0 0 0 3px` focus color | Focus indicator ring |',
+    ''
+  );
+
+  dh3('Surface Hierarchy');
+  dLines.push(
+    '| Level | Surface | Elevation | Token |',
+    '|-------|---------|-----------|-------|',
+    '| Base | Page background | 0 | `foundation.themed.base-clear` |',
+    '| Raised | Cards, panels | 1 | `foundation.themed.base-cloudy` |',
+    '| Floating | Dropdowns, popovers | 2 | `foundation.themed.base-clear` |',
+    '| Overlay | Modals, dialogs | 3 | `foundation.themed.base-clear` |',
+    '| Toast | Notifications | 4 | `foundation.themed.base-clear` |',
+    ''
+  );
+
+  /* Section 6: Construction Rules (static) */
+  dh2('6. Construction Rules');
+  dp('Mandatory structural requirements for every design output, regardless of medium, scope, or context.');
+
+  dh3('Reuse Mandate');
+  dp('Before creating anything, inventory what already exists:');
+  dLines.push(
+    '1. **Variables/Tokens**: If Figma Variables, CSS custom properties, or token files exist — use them exclusively. Never hardcode any value. Never define core or semantic tokens, those collections are complete. Other optional collections (for e.g. breakpoints, density, typography, colors) may be edited if necessary. Always align with the user before CRUD-operations on tokens.',
+    '2. **Components**: If a component library exists — use existing components. Only create new components when no suitable match exists. Check the library before building from primitives. Always align with the user before CRUD-operations on components.',
+    '3. **Screens/Flows**: If screens or flows already exist in the project — follow their patterns. Match existing layout structures, spacing rhythms, and component usage. New screens should look like they belong to the same product.',
+    ''
+  );
+
+  dh3('Layout Structure');
+  dp('All layout must use **structured layout** — the tool\'s native layout engine (Auto Layout in Figma, Flexbox/Grid in CSS/HTML, layout containers in Pencil, etc.). The term "structured layout" is used throughout; apply the equivalent mechanism in the active tool.');
+  dLines.push(
+    '- **Containers always**: Every element lives inside a layout container. No loose shapes, text nodes, or ungrouped elements.',
+    '- **Structured layout always**: Every container uses the tool\'s layout engine. No manual positioning inside layout containers.',
+    '- **Full spectrum**: Structured layout covers everything from the outermost page container down to the smallest component — nested layouts at every level.',
+    '- **Direction**: Choose horizontal, vertical, wrap, or grid based on content flow.',
+    '- **Spacing**: Use gap tokens from Section 5. No manual offset hacks.',
+    '- **Padding**: Use padding tokens from Section 4. Apply to container elements.',
+    '- **Constraints**: Elements that must escape structured layout (floating buttons, overlays, fixed headers, sticky footers) use explicit positioning constraints — set to top-left, top-right, bottom-left, bottom-right, center, or stretch. Never leave positioning at default when position matters.',
+    ''
+  );
+
+  dh3('Professional Quality');
+  dp('The output must look like a shipped product, not a wireframe or rough prototype:');
+  dLines.push(
+    '- Pixel-perfect alignment (structured layout handles this automatically)',
+    '- Correct typography hierarchy (heading > subheading > body > caption)',
+    '- Realistic placeholder text — not "Lorem ipsum" (exception: long-form body where content is not the focus)',
+    '- Proper image placeholders with aspect ratios matching intended content',
+    '- All interactive states considered (default, hover, focus, active, disabled)',
+    '- Edge cases handled (empty states, loading states, error states, overflow)',
+    '- Consistent spacing throughout — no "eyeballed" gaps',
+    ''
+  );
+
+  dh3('Token Usage Hierarchy');
+  dp('Always reference the highest available token layer. On setup, inspect which token collections exist and use the topmost level available:');
+  dLines.push(
+    '1. **Semantic tokens** — Use for everything: layout, spacing, typography, colors on screens and pages (e.g. `semantic.space.M`, `foundation.themed.base-clear`). Semantic tokens are the default layer for all work — no scoped component-token layer exists in this system.',
+    '2. **Optional collections** — Some projects have additional token sets (e.g. density, breakpoints, color overrides). When these exist, they override the semantic defaults for their scope. Check what\'s available before starting.',
+    '3. **Core tokens** — Never reference directly. Core tokens are primitives consumed by the semantic layer. If you find yourself writing `core.color.brand-a.500`, use the semantic equivalent `brand-a.themed.base` instead.',
+    ''
+  );
+
+  /* Section 7: Do's and Don'ts (static, expanded) */
+  dh2('7. Do\'s and Don\'ts');
+  dp('Design guardrails and anti-patterns.');
+
+  dh3('Do');
+  dLines.push(
+    '- Use semantic tokens exclusively — never reference core tokens directly',
+    '- Maintain minimum AA contrast (4.5:1) for all text on backgrounds',
+    '- Use `contrast-primary` for headings and body text, `contrast-secondary` for labels and metadata',
+    '- Keep spacing on the 4px grid — all spacing values snap to multiples of 4',
+    '- Use elevation tokens for depth — never hardcode box-shadow values',
+    '- Let the parametric system calculate values — adjust parameters, not individual tokens',
+    '- Use `foundation.themed` tokens for theme-aware surfaces',
+    '- Use `foundation.inverted` for contrast sections (e.g. dark footer on light page)',
+    '- Use structured layout for every container — no manual positioning',
+    '- Use existing variables/components before building new ones — align with the user on all CRUD-operations on variables and components',
+    '- Set explicit positioning constraints on elements that break out of structured layout',
+    '- Design for all relevant states (default, hover, focus, active, disabled, empty, loading, error)',
+    ''
+  );
+
+  dh3('Don\'t');
+  dLines.push(
+    '- Don\'t hardcode hex values — always reference semantic tokens',
+    '- Don\'t mix font families within a single text block',
+    '- Don\'t use more than 3 elevation levels on a single screen',
+    '- Don\'t use `contrast-tertiary` for readable text — it\'s only for placeholders and disabled states',
+    '- Don\'t combine multiple brand colors on a single interactive element',
+    '- Don\'t use the spacing scale for page-level layout gaps above 3XL — use layout tokens instead',
+    '- Don\'t skip the themed/inverted pattern — even single-theme products should use it for future-proofing',
+    '- Don\'t leave containers without structured layout (except canvas-level wrappers)',
+    '- Don\'t create new components when an existing one can be configured via variants/props',
+    '- Don\'t reference core tokens directly — always use the semantic layer equivalent',
+    ''
+  );
+
+  /* Section 8: Design Scope (static) */
+  dh2('8. Design Scope');
+  dp('This DESIGN.md applies to any design context. The same tokens, construction rules, and quality bar apply whether the task is:');
+  dLines.push(
+    '| Context | What it means | Componentize? |',
+    '|---------|---------------|---------------|',
+    '| Design from image/reference | Reproduce the visual style using these tokens | Discuss with user |',
+    '| Single component | Build one component following construction rules | Yes |',
+    '| Atoms | Smallest elements (button, input, badge, icon) | Always — these are components by definition |',
+    '| Molecules | Simple groups of atoms (search bar, form field with label) | Very likely — discuss with user |',
+    '| Organisms | Complex sections (header, card grid, sidebar navigation) | Maybe — discuss with user |',
+    '| Templates / Pages | Full screen layouts composed of organisms | No — compose from existing components |',
+    '| Flows | Multi-screen sequences with transitions | No — compose from existing components |',
+    ''
+  );
+  dp('**Componentization rule**: Not everything needs to become a reusable component. Atoms are always components. Molecules very likely. Organisms and above: discuss with the user whether reuse is expected. Templates, Pages, and Flows are compositions — they consume components but are not components themselves.');
+
+  /* Section 9: Resolution Hierarchy (static) */
+  dh2('9. Resolution Hierarchy');
+  dp('When rules from different sources conflict, resolve in this order (highest wins):');
+  dLines.push(
+    '1. **This DESIGN.md** — Project-specific tokens and construction rules',
+    '2. **Tool conventions** — Tool-specific structure and mechanics',
+    '3. **Design principles** — General design knowledge',
+    ''
+  );
+  dp('Example: A design principle says "cards can use shadows OR borders" but this DESIGN.md says "elevation = flat" — flat wins.');
+
+  zip.file('DESIGN.md', dLines.join('\n'));
+
+  /* Add README to ZIP */
+  zip.file('README.md', archLines.join('\n'));
+
+  /* Generate and download ZIP */
+  const blob = await zip.generateAsync({ type: 'blob' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const styleName = document.getElementById('export-style-name').value.trim();
+  a.download = (styleName ? styleName.replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase() : 'xd-visual-identity') + '.zip';
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 200);
 }

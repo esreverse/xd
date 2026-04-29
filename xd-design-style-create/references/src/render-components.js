@@ -212,7 +212,8 @@ function renderCards(f, w, r, defaultBrand, defaultScale, sh, sf, lh, ph, df) {
 
   /* Layout: single grid, 3 cols, 2 rows à 480px. Col 3 has stacked half-height cards. */
   const stack = (...ids) => `<div style="display:flex;flex-direction:column;gap:${ct.gapL}px;min-height:0">${ids.map(id => cards[id]).filter(Boolean).join('')}</div>`;
-  document.getElementById('comp-cards').innerHTML =
+  const compCardsEl = document.getElementById('comp-cards');
+  if (compCardsEl) compCardsEl.innerHTML =
     `<div class="comp-cards-grid cols-3" style="grid-template-rows:minmax(480px,auto) minmax(480px,auto)">${cards[0]}${cards[1]}${stack(2, 5)}${cards[3]}${cards[4]}${stack(6, 7)}</div>`;
 
   /* Re-acquire hovered comp card */
@@ -622,13 +623,12 @@ function renderComponents(r, bw, df) {
   /* Size grid: rows = Primary/Secondary-sel/Secondary-unsel/Tertiary-sel/Tertiary-unsel, cols = M/S/Pill */
   const gridRows = ACTION_STATE.map(state => {
     return `<div class="comp-size-label">${state.group}${state.label.includes('Action') ? '' : ' · ' + state.label}</div>` +
-      ['M', 'S'].map(sz => sizedBtn(state, sz, false)).join('') +
-      (sizedBtn(state, 'S', true));
+      ['M', 'S'].map(sz => sizedBtn(state, sz, false)).join('');
   }).join('');
 
   const gridHtml = `
-    <div class="comp-size-grid" style="grid-template-columns: auto repeat(3, minmax(auto, 200px))">
-      <div></div><div class="comp-size-header">M</div><div class="comp-size-header">S</div><div class="comp-size-header">Pill</div>
+    <div class="comp-size-grid" style="grid-template-columns: auto auto auto">
+      <div></div><div class="comp-size-header">M</div><div class="comp-size-header">S</div>
       ${gridRows}
     </div>`;
 

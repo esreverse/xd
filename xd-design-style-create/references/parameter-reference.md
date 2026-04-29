@@ -270,13 +270,6 @@ Technology-agnostic generation logic. The `unit` base is always `4px`. Multiplie
 │   Breakpoints:
 │     core:     S=395  M=768  L=1024  XL=1280  2XL=1536px
 │
-│   Grid:
-│     semantic.grid.margin: S={core.space.5}  M={core.space.8}  L={core.space.10}  XL={core.space.12}
-│     semantic.grid.gutter: S={core.space.4}  M={core.space.5}  L={core.space.6}   XL={core.space.6}
-│     Column count: 4 (S) · 8 (M) · 12 (L+)
-│
-│   Article Spacing:
-│     semantic.space.article: S=12  M=16  L=24  XL=40  2XL=64px
 │
 │   Typography (static atomics):
 │     core.font.weight:   light=300  regular=400  medium=500  semibold=600  bold=700  extrabold=800

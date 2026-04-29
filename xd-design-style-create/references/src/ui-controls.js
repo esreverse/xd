@@ -83,6 +83,7 @@ document.getElementById('modeTabs').addEventListener('click', e => {
   const wasDark = isDark;
   isDark = tab.dataset.mode === 'dark';
   document.getElementById('main').classList.toggle('dark-mode', isDark);
+  document.body.classList.toggle('dark-mode', isDark);
   /* Mirror canvas shade when switching modes (50↔950, 100↔900, 200↔800, 300↔700, 400↔600, 500↔500) */
   if (canvasBg && kb.shade.scale && wasDark !== isDark) {
     const steps = kb.shade.scale;

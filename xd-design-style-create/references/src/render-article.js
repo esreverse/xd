@@ -12,14 +12,6 @@ function renderArticle(f, w, r, sh, lh, ph, sf) {
   const sp    = Object.fromEntries(calcSpacing(sf).map(s => [s.name, s.val]));
   const brand = COLORS.brand[0]?.hex || '#2563EB';
 
-  const brandScale = generateOklchScale(brand);
-  const calloutBg     = isDark ? brandScale[8].hex : brandScale[0].hex;
-  const calloutBorder = isDark ? brandScale[4].hex : brandScale[5].hex;
-
-  const accentHex    = COLORS.accent[0]?.hex || brand;
-  const accentScale  = generateOklchScale(accentHex);
-  const accentBg     = isDark ? accentScale[8].hex : accentScale[0].hex;
-  const accentBorder = isDark ? accentScale[4].hex : accentScale[5].hex;
   const pGap        = Math.round(16 * ph) + 'px';  /* paragraph spacing */
 
   document.getElementById('article-content').innerHTML = `
@@ -29,7 +21,7 @@ function renderArticle(f, w, r, sh, lh, ph, sf) {
       Design systems are more than component libraries. They are the codification of design decisions, a shared language between designers and developers, and the foundation upon which scalable products are built.
     </p>
 
-    <img src="https://picsum.photos/seed/article1/800/400" style="margin-bottom:${sp.XS}px" loading="lazy">
+    <img src="https://picsum.photos/id/29/800/400" style="margin-bottom:${sp.XS}px" loading="lazy">
     <p class="caption" style="margin-bottom:${sp['2XL']}px">A well-structured design system creates harmony across every touchpoint.</p>
 
     <h2 style="font-size:${sizes.h2}px;line-height:${1.0*lh};font-weight:${w.heading};margin-bottom:${sp.L}px;margin-top:${sp['3XL']}px;font-family:${f.heading}">Tokens: The Atomic Units of Design</h2>
@@ -41,11 +33,6 @@ function renderArticle(f, w, r, sh, lh, ph, sf) {
     <p style="font-size:${sizes.body}px;line-height:${1.4*lh};margin-bottom:${pGap};font-family:${f.body};color:var(--color-contrast-primary)">
       When a brand color changes, updating a single token propagates the change everywhere it is used. This is the power of abstraction applied to visual design. Tokens eliminate the need for search-and-replace operations and reduce the risk of inconsistency.
     </p>
-
-    <div class="callout" style="margin:${sp['2XL']}px 0;border-radius:0 ${r.M}px ${r.M}px 0;background:${accentBg};border-color:${accentBorder};font-family:${f.body}">
-      <strong style="display:block;margin-bottom:4px;color:var(--color-contrast-primary)">About Design Tokens</strong>
-      <p style="font-size:${sizes.body}px;margin:0;color:var(--color-contrast-secondary);line-height:${1.4*lh}">Design tokens were first introduced by Salesforce in their Lightning Design System. Today, they are a core concept in every major design system, from Material Design to Carbon. The W3C Design Tokens Community Group is working on a standard format for token exchange.</p>
-    </div>
 
     <h3 style="font-size:${sizes.h3}px;line-height:${1.0*lh};font-weight:${w.heading};margin-bottom:${sp.L}px;margin-top:${sp['2XL']}px;font-family:${f.heading}">The Three Tiers</h3>
 
@@ -71,10 +58,6 @@ function renderArticle(f, w, r, sh, lh, ph, sf) {
         <tr><td>Brand</td><td><code>brand-primary</code></td><td>${brand}</td><td>${brand}</td></tr>
       </tbody>
     </table>
-
-    <blockquote style="border-color:${brand};margin:${sp.XL}px 0;border-radius:0 ${r.M}px ${r.M}px 0;background:${calloutBg};font-family:${f.heading}">
-      <p style="font-size:${sizes.body}px;margin:0;color:var(--color-contrast-primary);font-style:italic">"The best design systems feel invisible to the user but indispensable to the team. They reduce friction everywhere: in design, in development, and in decision-making."</p>
-    </blockquote>
 
     <h2 style="font-size:${sizes.h2}px;line-height:${1.0*lh};font-weight:${w.heading};margin-bottom:${sp.L}px;margin-top:${sp['3XL']}px;font-family:${f.heading}">Parametric Design: Flexibility with Guardrails</h2>
 
@@ -103,7 +86,7 @@ function renderArticle(f, w, r, sh, lh, ph, sf) {
       </div>
     </div>
 
-    <img src="https://picsum.photos/seed/article2/800/350" style="margin-bottom:${sp.XS}px" loading="lazy">
+    <img src="https://picsum.photos/id/1036/800/350" style="margin-bottom:${sp.XS}px" loading="lazy">
     <p class="caption" style="margin-bottom:${sp['2XL']}px">Parameters control the character of the design while maintaining mathematical relationships.</p>
 
     <h3 style="font-size:${sizes.h3}px;line-height:${1.0*lh};font-weight:${w.heading};margin-bottom:${sp.L}px;margin-top:${sp['2XL']}px;font-family:${f.heading}">Snap Functions</h3>
@@ -134,12 +117,7 @@ snap_to(scale, x) = scale[argmin(|scale[i] - x|)]
       <li><strong style="color:var(--color-contrast-primary)">H (Hue)</strong> is the angular position on the color wheel, 0 to 360 degrees.</li>
     </ol>
 
-    <div class="callout" style="margin:${sp['2XL']}px 0;border-radius:0 ${r.M}px ${r.M}px 0;background:${calloutBg};border-color:${calloutBorder};font-family:${f.body}">
-      <strong style="display:block;margin-bottom:4px;color:var(--color-contrast-primary)">Key Insight</strong>
-      <p style="font-size:${sizes.body}px;margin:0;color:var(--color-contrast-secondary);line-height:${1.4*lh}">By generating color scales in OKLCH space, we ensure that lightness steps from 50 to 950 are visually equidistant. This produces more natural-looking gradients and more predictable contrast ratios for accessibility compliance.</p>
-    </div>
-
-    <img src="https://picsum.photos/seed/article3/800/300" style="margin-bottom:${sp.XS}px" loading="lazy">
+    <img src="https://picsum.photos/id/1015/800/300" style="margin-bottom:${sp.XS}px" loading="lazy">
     <p class="caption" style="margin-bottom:${sp['2XL']}px">OKLCH produces perceptually uniform color scales across all hues.</p>
 
     <h2 style="font-size:${sizes.h2}px;line-height:${1.0*lh};font-weight:${w.heading};margin-bottom:${sp.L}px;margin-top:${sp['3XL']}px;font-family:${f.heading}">Conclusion</h2>

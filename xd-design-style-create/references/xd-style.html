@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brand Visual Identity</title>
+<title>XD Visual Identity</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 
 /* ============================================================
@@ -35,9 +36,9 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   right: 16px;
   bottom: 16px;
   width: 300px;
-  background: rgba(255,255,255,0.60);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba(255,255,255,0.70);
+  backdrop-filter: blur(48px) saturate(1.4);
+  -webkit-backdrop-filter: blur(48px) saturate(1.4);
   border-radius: 20px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -77,7 +78,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
    ============================================================ */
 .interface-pill-tabs {
   display: flex;
-  background: rgba(0,0,0,0.08);
+  background: rgba(0,0,0,0.06);
   border-radius: 9999px;
   padding: 2px;
   margin-bottom: 12px;
@@ -89,7 +90,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   border-radius: 9999px;
   background: transparent;
   color: #555;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   text-align: center;
@@ -160,7 +161,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   height: 28px;
   border: none;
   border-radius: 9999px;
-  background: rgba(0,0,0,0.08);
+  background: rgba(0,0,0,0.06);
   text-align: center;
   font-size: 12px;
   font-family: inherit;
@@ -172,7 +173,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   display: flex;
   border-radius: 9999px;
   overflow: hidden;
-  background: rgba(0,0,0,0.08);
+  background: rgba(0,0,0,0.06);
   height: 28px;
 }
 .interface-seg-btn {
@@ -181,7 +182,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 16px;
   color: #555;
   display: flex;
   align-items: center;
@@ -202,9 +203,9 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   height: 28px;
   border: none;
   border-radius: 9999px;
-  background: rgba(0,0,0,0.08);
+  background: rgba(0,0,0,0.06);
   padding: 0 28px 2px 12px;
-  font-size: 11px;
+  font-size: 12px;
   font-family: inherit;
   color: #333;
   cursor: pointer;
@@ -237,9 +238,9 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   padding: 8px 0;
   border: none;
   border-radius: 9999px;
-  background: rgba(0,0,0,0.08);
+  background: rgba(0,0,0,0.06);
   color: #555;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   font-family: inherit;
@@ -258,7 +259,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   border-radius: 9999px;
   background: #141412;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
@@ -285,7 +286,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   align-items: flex-start;
   justify-content: flex-end;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   cursor: pointer;
   border: none;
@@ -308,7 +309,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   border-radius: 9999px;
   background: none;
   color: #141412;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   font-family: inherit;
@@ -322,26 +323,338 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
    INTERFACE: Export Checkbox Options
    ============================================================ */
 .interface-export-options {
-  margin-top: 20px;
-  margin-bottom: 12px;
+  margin-top: 24px;
+  margin-bottom: 20px;
 }
 .interface-export-option {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  padding: 6px 0;
+  padding: 12px 0;
   cursor: pointer;
   font-size: 12px;
-  color: #444;
+  color: var(--color-contrast-secondary);
   line-height: 1.3;
 }
 .interface-export-option input[type="checkbox"] {
   margin: 1px 0 0;
-  flex-shrink: 0;
-  accent-color: #141412;
 }
-.interface-export-option-label { font-weight: 500; color: #3a3a38; }
-.interface-export-option-desc { font-size: 11px; color: #888; margin-top: 4px; }
+.interface-export-option-label { font-size: 12px; font-weight: 600; color: var(--color-contrast-primary); }
+.interface-export-option-desc { font-size: 12px; color: var(--color-contrast-secondary); margin-top: 4px; line-height: 1.4; }
+
+/* ============================================================
+   EXPORT OVERLAY
+   ============================================================ */
+.export-overlay-backdrop {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.15);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding-right: 332px;
+}
+.export-overlay-backdrop.open {
+  display: flex;
+}
+.export-overlay {
+  width: 720px;
+  max-height: calc(100vh - 64px);
+  background: #FFFFFF;
+  border-radius: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 32px 28px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 12px;
+  color: #3a3a38;
+}
+.export-overlay::-webkit-scrollbar { width: 4px; }
+.export-overlay::-webkit-scrollbar-track { background: transparent; }
+.export-overlay::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 4px; }
+
+.export-overlay-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-contrast-primary);
+  margin-bottom: 40px;
+}
+.export-overlay-section {
+  margin-bottom: 40px;
+}
+.export-overlay-section + .export-overlay-section {
+  margin-top: 56px;
+}
+.export-overlay-section-title {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-contrast-primary);
+  margin-bottom: 20px;
+}
+.export-overlay-section-desc {
+  font-size: 14px;
+  color: var(--color-contrast-primary);
+  margin-top: -8px;
+  margin-bottom: 32px;
+  line-height: 1.4;
+}
+.export-overlay-section-desc + .export-overlay-group > .export-overlay-group-title { margin-top: 0; }
+.export-overlay-section-desc + .interface-export-options {
+  margin-top: -8px;
+}
+.export-overlay-group {
+  margin-bottom: 16px;
+}
+.export-overlay-group-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-contrast-primary);
+  margin-bottom: 24px;
+  margin-top: 48px;
+}
+.export-overlay-group:first-child .export-overlay-group-title {
+  margin-top: 32px;
+}
+.export-overlay-group-body {
+  padding-left: 16px;
+}
+.export-overlay-param {
+  margin-bottom: 32px;
+}
+.export-overlay-param-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-contrast-primary);
+  margin-bottom: 6px;
+  white-space: nowrap;
+}
+.export-overlay-param-desc {
+  font-size: 12px;
+  color: var(--color-contrast-secondary);
+  line-height: 1.4;
+  margin-top: 4px;
+}
+.export-overlay-param-desc:not(:empty) {
+  margin-bottom: 8px;
+}
+.export-overlay-field { margin-bottom: 12px; }
+.export-overlay-field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-contrast-primary);
+  margin-bottom: 6px;
+}
+.export-overlay-field-input,
+.export-overlay-field-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--color-contrast-primary);
+  background: rgba(0,0,0,0.06);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px;
+  outline: 2px solid transparent;
+  outline-offset: 0;
+  transition: outline-color 0.1s;
+}
+.export-overlay-field-input:hover,
+.export-overlay-field-input:focus,
+.export-overlay-field-textarea:hover,
+.export-overlay-field-textarea:focus {
+  outline-color: #141412;
+}
+.export-overlay-field-input::placeholder,
+.export-overlay-field-textarea::placeholder {
+  color: rgba(20,20,18,0.35);
+}
+.export-overlay-field-textarea {
+  resize: vertical;
+  min-height: 120px;
+  max-height: 240px;
+}
+.export-overlay-field-counter {
+  font-size: 12px;
+  color: rgba(20,20,18,0.35);
+  text-align: right;
+  margin-top: 4px;
+}
+.export-overlay-radio-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+.export-overlay-radio-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-contrast-secondary);
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.1s;
+}
+.export-overlay-radio-row label:hover {
+  color: var(--color-contrast-primary);
+}
+.export-overlay-radio-row label:has(input:checked) {
+  color: var(--color-contrast-primary);
+}
+.export-overlay-radio-row input[type="radio"],
+.interface-export-option input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  flex-shrink: 0;
+  background: rgba(0,0,0,0.09);
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+.export-overlay-radio-row input[type="radio"] {
+  border-radius: 50%;
+}
+.interface-export-option input[type="checkbox"] {
+  border-radius: 3px;
+}
+.export-overlay-radio-row input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #141412;
+}
+.interface-export-option input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 1.5px;
+  background: #141412;
+}
+.export-overlay-divider {
+  height: 1px;
+  background: rgba(0,0,0,0.06);
+  margin: 24px 0;
+}
+.export-overlay-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+}
+.export-overlay-actions button {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.export-overlay-cancel {
+  background: none;
+  border: 1.5px solid rgba(20,20,18,0.2);
+  color: #3a3a38;
+}
+.export-overlay-cancel:hover { border-color: rgba(20,20,18,0.4); }
+.export-overlay-confirm {
+  background: #141412;
+  border: 1.5px solid #141412;
+  color: #FAFAF8;
+}
+.export-overlay-confirm:hover { opacity: 0.8; }
+.export-overlay-confirm:active { transform: scale(0.98); }
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+
+/* Panel */
+.dark-mode #panel {
+  background: rgba(20,20,18,0.95);
+  color: rgba(250,250,248,0.85);
+}
+.dark-mode #panel::-webkit-scrollbar-thumb { background: rgba(250,250,248,0.2); }
+
+/* Panel: interface elements — all interactive bg = 5% white */
+.dark-mode .interface-section-label { color: #FAFAF8; }
+.dark-mode .interface-pill-tabs { background: rgba(250,250,248,0.05); }
+.dark-mode .interface-pill-tab { color: rgba(250,250,248,0.5); }
+.dark-mode .interface-pill-tab.active { background: rgba(250,250,248,0.12); color: #FAFAF8; }
+.dark-mode .interface-pill-tab:hover:not(.active) { color: rgba(250,250,248,0.7); }
+.dark-mode .interface-param-label { color: rgba(250,250,248,0.62); }
+.dark-mode .interface-lock-btn { color: #FAFAF8; }
+.dark-mode .interface-num-input { background: rgba(250,250,248,0.05); color: rgba(250,250,248,0.85); }
+.dark-mode .interface-num-input:focus { box-shadow: 0 0 0 2px rgba(250,250,248,0.1); }
+.dark-mode .interface-seg-pill { background: rgba(250,250,248,0.05); }
+.dark-mode .interface-seg-btn { color: rgba(250,250,248,0.5); }
+.dark-mode .interface-seg-btn:hover { background: rgba(250,250,248,0.06); }
+.dark-mode .interface-seg-btn:first-child { border-right-color: rgba(250,250,248,0.06); }
+.dark-mode .interface-select { background-color: rgba(250,250,248,0.05); color: rgba(250,250,248,0.85); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E"); }
+.dark-mode .interface-select:focus { box-shadow: 0 0 0 2px rgba(250,250,248,0.1); }
+.dark-mode .interface-action-btn { background: rgba(250,250,248,0.05); color: rgba(250,250,248,0.62); }
+.dark-mode .interface-action-btn:hover { background: rgba(250,250,248,0.10); }
+.dark-mode .interface-randomize-btn { background: #FAFAF8; color: #141412; }
+.dark-mode .interface-randomize-btn:hover { background: #E8E8E4; }
+.dark-mode .interface-export-btn { border-color: rgba(250,250,248,0.2); color: rgba(250,250,248,0.7); }
+.dark-mode .interface-export-btn:hover { opacity: 0.8; }
+/* checkbox dark mode handled above with radio styles */
+.dark-mode .interface-palette-swatch:hover { outline-color: #FAFAF8; }
+
+/* Export overlay — very dark panel, fields/radios punch to solid black. */
+.dark-mode .export-overlay-backdrop { background: rgba(0,0,0,0.10); }
+.dark-mode .export-overlay {
+  background: #141412;
+  color: rgba(250,250,248,0.85);
+}
+.dark-mode .export-overlay::-webkit-scrollbar-thumb { background: rgba(250,250,248,0.2); }
+.dark-mode .export-overlay-radio-row label { color: rgba(250,250,248,0.62); }
+.dark-mode .export-overlay-radio-row label:hover { color: #FAFAF8; }
+.dark-mode .export-overlay-radio-row label:has(input:checked) { color: #FAFAF8; }
+.dark-mode .export-overlay-radio-row input[type="radio"],
+.dark-mode .interface-export-option input[type="checkbox"] { background: rgba(250,250,248,0.15); }
+.dark-mode .export-overlay-radio-row input[type="radio"]:checked::after,
+.dark-mode .interface-export-option input[type="checkbox"]:checked::after { background: #FAFAF8; }
+.dark-mode .export-overlay-field-input,
+.dark-mode .export-overlay-field-textarea {
+  background: rgba(250,250,248,0.10);
+  color: #FAFAF8;
+}
+.dark-mode .export-overlay-field-input:hover,
+.dark-mode .export-overlay-field-input:focus,
+.dark-mode .export-overlay-field-textarea:hover,
+.dark-mode .export-overlay-field-textarea:focus {
+  outline-color: #FAFAF8;
+}
+.dark-mode .export-overlay-field-input::placeholder,
+.dark-mode .export-overlay-field-textarea::placeholder {
+  color: rgba(250,250,248,0.35);
+}
+.dark-mode .export-overlay-field-counter {
+  color: rgba(250,250,248,0.35);
+}
+.dark-mode .export-overlay-divider { background: rgba(250,250,248,0.05); }
+.dark-mode .export-overlay-cancel { border-color: rgba(250,250,248,0.2); color: rgba(250,250,248,0.7); }
+.dark-mode .export-overlay-cancel:hover { border-color: rgba(250,250,248,0.4); }
+.dark-mode .export-overlay-confirm { background: #FAFAF8; border-color: #FAFAF8; color: #141412; }
 
 
 /* ============================================================
@@ -351,8 +664,10 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   --font-mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', monospace;
   --color-base-clear: #FAFAF8;
   --color-base-cloudy: #F0EFE9;
+  --color-base-shade: rgba(20,20,18,0.08);
   --color-contrast-primary: #141412;
   --color-contrast-secondary: rgba(20,20,18,0.62);
+  --color-contrast-tertiary: rgba(20,20,18,0.40);
   --font-family-heading: 'Georgia', serif;
   --font-family-body: 'Inter', -apple-system, sans-serif;
   --font-lineheight-heading: 1.0;
@@ -368,8 +683,10 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
 .dark-mode {
   --color-base-clear: #141412;
   --color-base-cloudy: #1E1D1A;
+  --color-base-shade: rgba(250,250,248,0.08);
   --color-contrast-primary: #FAFAF8;
   --color-contrast-secondary: rgba(250,250,248,0.62);
+  --color-contrast-tertiary: rgba(250,250,248,0.40);
 }
 
 
@@ -458,7 +775,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   position: relative;
 }
 .brand-swatch-top .brand-contrast-sample {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   font-family: var(--font-mono);
   display: block;
@@ -467,22 +784,19 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   padding: 16px 16px;
   background: #FFFFFF;
 }
-.dark-mode .brand-swatch-bottom { background: var(--color-base-clear); }
 .brand-swatch-name {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: #141412;
   font-family: var(--font-mono);
   margin-bottom: 8px;
 }
-.dark-mode .brand-swatch-name { color: var(--color-contrast-primary); }
 .brand-swatch-meta {
   font-size: 10px;
-  color: #888;
+  color: rgba(20,20,18,0.62);
   font-family: var(--font-mono);
   line-height: 1.6;
 }
-.dark-mode .brand-swatch-meta { color: rgba(250,250,248,0.45); }
 .brand-swatch-badges {
   display: flex;
   gap: 4px;
@@ -517,7 +831,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
 .brand-swatch-lock:hover, .brand-swatch-remove-btn:hover { background: rgba(0,0,0,0.28); }
 .brand-swatch-lock.locked { background: rgba(0,0,0,0.6); color: #fff; }
 .brand-swatch-lock svg { width: 12px; height: 12px; }
-.brand-swatch-remove-btn { font-size: 15px; line-height: 1; padding-bottom: 1px; font-family: inherit; }
+.brand-swatch-remove-btn { font-size: 16px; line-height: 1; padding-bottom: 1px; font-family: inherit; }
 
 /* Shade indicator — top left of colored area */
 .brand-swatch-shade {
@@ -562,7 +876,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
 .brand-contrast-badge {
   display: inline-flex;
   align-items: center;
-  font-size: 9px;
+  font-size: 10px;
   font-family: var(--font-mono);
   padding: 2px 4px;
   border-radius: 4px;
@@ -576,6 +890,11 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
 .dark-mode .brand-contrast-badge.aaa  { background: rgba(90,155,94,0.25);  color: #7BC47F; }
 .dark-mode .brand-contrast-badge.aa   { background: rgba(200,160,40,0.25); color: #D4C060; }
 .dark-mode .brand-contrast-badge.fail { background: rgba(217,79,67,0.25);  color: #E8807A; }
+/* Cards always have white bottom — force light badge colors */
+.dark-mode .brand-swatch-bottom .brand-contrast-badge       { background: rgba(20,20,18,0.08); color: #888; }
+.dark-mode .brand-swatch-bottom .brand-contrast-badge.aaa  { background: rgba(90,155,94,0.15);  color: #3D7A40; }
+.dark-mode .brand-swatch-bottom .brand-contrast-badge.aa   { background: rgba(200,160,40,0.15); color: #8A7020; }
+.dark-mode .brand-swatch-bottom .brand-contrast-badge.fail { background: rgba(217,79,67,0.15);  color: #B03A30; }
 
 
 /* ============================================================
@@ -602,10 +921,9 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
 .brand-typo-section { margin-bottom: 96px; }
 .brand-typo-row {
   padding: 12px 0;
-  border-bottom: 1px solid rgba(20,20,18,0.08);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-contrast-primary) 8%, transparent);
 }
 .brand-typo-row:last-child { border-bottom: none; }
-.dark-mode .brand-typo-row { border-bottom-color: rgba(250,250,248,0.08); }
 .brand-typo-meta {
   display: flex;
   gap: 12px;
@@ -613,12 +931,10 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   margin-top: 4px;
   font-family: var(--font-mono);
   font-size: 10px;
-  color: #888;
+  color: var(--color-contrast-secondary);
 }
-.dark-mode .brand-typo-meta { color: rgba(250,250,248,0.4); }
 .brand-typo-meta span { white-space: nowrap; }
-.brand-typo-token-name { font-weight: 600; color: #141412; opacity: 0.5; }
-.dark-mode .brand-typo-token-name { color: rgba(250,250,248,0.7); opacity: 1; }
+.brand-typo-token-name { font-weight: 600; color: var(--color-contrast-primary); opacity: 0.5; }
 
 
 /* ============================================================
@@ -655,21 +971,18 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   border-radius: 4px;
 }
 .brand-radius-token, .brand-border-token, .brand-spacing-label, .brand-sizing-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  color: #444;
+  color: var(--color-contrast-primary);
+  opacity: 0.7;
   font-family: var(--font-mono);
   white-space: nowrap;
 }
-.dark-mode .brand-radius-token, .dark-mode .brand-border-token,
-.dark-mode .brand-spacing-label, .dark-mode .brand-sizing-label { color: rgba(250,250,248,0.7); }
 .brand-radius-label, .brand-border-label, .brand-spacing-value, .brand-sizing-value {
   font-size: 10px;
-  color: #888;
+  color: var(--color-contrast-secondary);
   font-family: var(--font-mono);
 }
-.dark-mode .brand-radius-label, .dark-mode .brand-border-label,
-.dark-mode .brand-spacing-value, .dark-mode .brand-sizing-value { color: rgba(250,250,248,0.4); }
 .brand-token-label-group {
   display: flex;
   flex-direction: column;
@@ -708,21 +1021,22 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
 .brand-hotkey-table td:first-child {
   font-family: var(--font-mono);
   font-weight: 600;
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
   width: 80px;
   min-width: 80px;
 }
 .brand-hotkey-table td:nth-child(2) {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--color-contrast-tertiary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-contrast-primary);
   white-space: nowrap;
   width: 100px;
   min-width: 100px;
 }
 .brand-hotkey-table td:nth-child(3) {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--color-contrast-secondary);
   white-space: nowrap;
 }
@@ -771,7 +1085,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   border-radius: var(--radius-m);
   overflow-x: auto;
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--color-contrast-primary);
   line-height: 1.5;
 }
@@ -914,13 +1228,10 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
 /* Button size grid */
 .comp-size-grid {
   display: grid;
-  grid-template-columns: auto repeat(4, minmax(auto, 200px));
-  gap: 24px 48px;
+  gap: 24px 80px;
   align-items: center;
-  justify-items: center;
-  max-width: 900px;
+  justify-items: start;
 }
-.comp-size-grid .comp-size-label { justify-self: start; }
 .comp-size-header, .comp-size-label {
   font-size: 10px;
   font-weight: 600;
@@ -929,7 +1240,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   color: var(--color-contrast-secondary);
   font-family: var(--font-mono);
 }
-.comp-size-header { text-align: center; }
+.comp-size-header { text-align: left; }
 
 /* Input field previews */
 .comp-input-states {
@@ -966,7 +1277,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   color: var(--color-contrast-primary);
 }
 .comp-input-helper {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--color-contrast-secondary);
 }
 .comp-input-detail {
@@ -1027,7 +1338,7 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
 .key-legend-desc {
   color: #FAFAF8;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
   white-space: nowrap;
   margin-left: 8px;
@@ -1147,12 +1458,13 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
   <!-- PAGE: Components -->
   <div id="page-components" style="display:none">
 
-    <!-- Cards -->
+    <!-- Cards (disabled)
     <div class="brand-color-section">
       <div class="brand-section-title">Cards</div>
       <div class="brand-section-subtitle">Preview only — demonstrates how semantic token sets can be varied. A representative card is automatically exported as component tokens.</div>
       <div id="comp-cards"></div>
     </div>
+    -->
 
     <!-- Action -->
     <div class="brand-color-section">
@@ -1366,50 +1678,292 @@ body { height: 100%; overflow: hidden; display: flex; font-family: -apple-system
 
 </div><!-- /panel-content -->
 <div id="panel-bottom">
-  <div class="interface-export-options">
-    <div class="interface-section-label" style="margin-top:0">Optional Collections</div>
-    <label class="interface-export-option">
-      <input type="checkbox" id="export-breakpoints">
-      <div>
-        <div class="interface-export-option-label">Breakpoints (adds: S/M/L/XL/2XL)</div>
-        <div class="interface-export-option-desc">Adds collections with frame width and headlines per breakpoint mode</div>
-      </div>
-    </label>
-    <label class="interface-export-option">
-      <input type="checkbox" id="export-contrast">
-      <div>
-        <div class="interface-export-option-label">Accessibility (adds: High Contrast)</div>
-        <div class="interface-export-option-desc">WCAG AAA OKLCH shades selected</div>
-      </div>
-    </label>
-    <label class="interface-export-option">
-      <input type="checkbox" id="export-density">
-      <div>
-        <div class="interface-export-option-label">Density (adds: Compact)</div>
-        <div class="interface-export-option-desc">Size and spacing scaled down 2 steps</div>
-      </div>
-    </label>
-    <label class="interface-export-option">
-      <input type="checkbox" id="export-colors">
-      <div>
-        <div class="interface-export-option-label">Colors (Brand/Accent/Combos)</div>
-        <div class="interface-export-option-desc">Each color as a switchable collection</div>
-      </div>
-    </label>
-    <label class="interface-export-option">
-      <input type="checkbox" id="export-typography">
-      <div>
-        <div class="interface-export-option-label">Typography</div>
-        <div class="interface-export-option-desc">Adds a collection so font families &amp; weights per platform can be added (e.g. iOS, Android)</div>
-      </div>
-    </label>
-  </div>
-
-  <button class="interface-export-btn" onclick="exportTokens()">Export Tokens</button>
-
+  <button class="interface-export-btn" onclick="openExportOverlay()">Export Style &hellip;</button>
 </div><!-- /panel-bottom -->
 </div><!-- /panel -->
 
+
+<!-- Export Overlay -->
+<div class="export-overlay-backdrop" id="export-overlay" onclick="if(event.target===this)closeExportOverlay()">
+  <div class="export-overlay">
+    <div class="export-overlay-title">Export Style</div>
+
+    <!-- Style Set -->
+    <div class="export-overlay-section">
+      <div class="export-overlay-section-title">Basic Information</div>
+
+      <div class="export-overlay-field">
+        <label class="export-overlay-field-label" for="export-style-name">Name</label>
+        <input type="text" id="export-style-name" class="export-overlay-field-input" placeholder="e.g. brand, wireframe, dark-terminal, coffee-shop" maxlength="60">
+      </div>
+
+      <div class="export-overlay-field">
+        <label class="export-overlay-field-label" for="export-style-desc">Description</label>
+        <textarea id="export-style-desc" class="export-overlay-field-textarea" placeholder="What is the project or purpose? What will be designed — a website, app, prototype? What makes this style distinctive? Helps the agent apply the design decisions and tokens below in context." maxlength="320" rows="3"></textarea>
+        <div class="export-overlay-field-counter"><span id="export-style-desc-count">0</span>/320</div>
+      </div>
+    </div>
+
+    <!-- Design Decisions beyond Tokens -->
+    <div class="export-overlay-section">
+      <div class="export-overlay-section-title">Design Decisions beyond Tokens</div>
+      <div class="export-overlay-section-desc">The settings below are design decisions that go beyond what design tokens can capture. They will be exported as part of a DESIGN.md (similar to Google Stitch format, but more detailed) to instruct design agents on how to generate designs.</div>
+
+      <!-- Atmosphere -->
+      <div class="export-overlay-group">
+        <div class="export-overlay-group-title">Atmosphere</div>
+        <div class="export-overlay-group-body">
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Default Theme</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-theme" value="light-only" data-desc="The interface uses a light theme exclusively."> Light only</label>
+            <label><input type="radio" name="dd-theme" value="dark-only" data-desc="The interface uses a dark theme exclusively."> Dark only</label>
+            <label><input type="radio" name="dd-theme" value="auto-adaptive" data-desc="The interface supports both light and dark themes, switching automatically based on system preference."> Auto / Adaptive</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Background</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-background" value="foundation-only" data-desc="Page and section backgrounds use only foundation colors (light/dark neutrals). No colored backgrounds."> Foundation (light/dark) only</label>
+            <label><input type="radio" name="dd-background" value="brand-accent-only" data-desc="Page and section backgrounds use brand or accent colors exclusively. No neutral foundation backgrounds."> Brand/accent colors only</label>
+            <label><input type="radio" name="dd-background" value="mix" data-desc="Page and section backgrounds mix neutral foundation colors with brand or accent colors where appropriate."> Mix</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Whitespace</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-whitespace" value="little" data-desc="Minimal whitespace between page sections and component groups. Content is tightly packed."> Little</label>
+            <label><input type="radio" name="dd-whitespace" value="medium" data-desc="Moderate whitespace between page sections and component groups. Balanced breathing room."> Medium</label>
+            <label><input type="radio" name="dd-whitespace" value="lots-of" data-desc="Generous whitespace between page sections and component groups. Content has ample breathing room."> Lots of</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Positioning</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-positioning" value="grid-only" data-desc="All content is strictly positioned on a grid. Suitable for tools and data-heavy applications."> Grid only</label>
+            <label><input type="radio" name="dd-positioning" value="grid-mostly" data-desc="Content follows a grid with occasional free placement for visual emphasis."> Grid mostly</label>
+            <label><input type="radio" name="dd-positioning" value="free" data-desc="Content is freely positioned on the page. Suitable for brand, image, and portfolio pages."> Free</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Elevation</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-elevation" value="flat" data-desc="The interface is entirely flat. No drop shadows or layered depth."> Flat</label>
+            <label><input type="radio" name="dd-elevation" value="dropshadows" data-desc="The interface uses drop shadows to create visual depth and layered hierarchy."> Dropshadows</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Typography</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-typography" value="functional" data-desc="Typography serves readability and structure. Headings create hierarchy but stay systematic — no decorative or oversized type treatments."> Functional</label>
+            <label><input type="radio" name="dd-typography" value="expressive" data-desc="Typography is used as a design element. Large decorative headlines, mixed font pairings, and typographic layouts are acceptable — type can carry visual weight beyond pure hierarchy."> Expressive</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Decoration</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-decoration" value="none" data-desc="No decorative elements. Pure functional layout — content, whitespace, and typography only."> None</label>
+            <label><input type="radio" name="dd-decoration" value="supportive" data-desc="Decorative elements that support orientation and hierarchy — icons for wayfinding, shapes to emphasize structure, visual cues that guide the user through flows and funnels."> Supportive</label>
+            <label><input type="radio" name="dd-decoration" value="expressive" data-desc="Decorative elements to build maximum atmosphere — layered textures, ornamental shapes, visual richness as part of the experience itself."> Expressive</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Vibe</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-vibe" value="formal" data-desc="Strictly professional, corporate, institutional. Restrained visuals, neutral tone, no personality in the interface."> Formal</label>
+            <label><input type="radio" name="dd-vibe" value="casual" data-desc="Relaxed, approachable, friendly. Warm but not playful — the interface feels human without being loud."> Casual</label>
+            <label><input type="radio" name="dd-vibe" value="playful" data-desc="Joyful, energetic, expressive. Bold colors, rounded shapes, illustrations, micro-interactions — the interface has personality and doesn't hide it."> Playful</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Complexity</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-complexity" value="low" data-desc="Screens stay simple. Functionality is spread across multiple views, and non-essential features are omitted to keep each screen focused."> Low</label>
+            <label><input type="radio" name="dd-complexity" value="moderate" data-desc="Screens can contain a moderate amount of functionality. Filters, sorting, and secondary actions are acceptable when the use case calls for them."> Moderate</label>
+            <label><input type="radio" name="dd-complexity" value="high" data-desc="Screens can be dense when the use case demands it — multiple filters, sort options, data views, and complex controls on a single page are acceptable."> High</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Surfaces -->
+      <div class="export-overlay-group">
+        <div class="export-overlay-group-title">Surfaces</div>
+        <div class="export-overlay-group-body">
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Style</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-surface-style" value="solids" data-desc="Surfaces use flat solid fills. No gradients or mesh effects."> Solids</label>
+            <label><input type="radio" name="dd-surface-style" value="gradients" data-desc="Surfaces use linear or radial gradients for visual depth and interest."> Gradients</label>
+            <label><input type="radio" name="dd-surface-style" value="meshes" data-desc="Surfaces use mesh gradients for complex, organic color blending."> Meshes</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Intensity</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-surface-intensity" value="low" data-desc="Surface colors are muted, subtle, and pastel-toned."> Low / Subtle / Pastel</label>
+            <label><input type="radio" name="dd-surface-intensity" value="mixed" data-desc="Surface colors vary between subtle and vivid depending on context."> Mixed</label>
+            <label><input type="radio" name="dd-surface-intensity" value="high" data-desc="Surface colors are saturated, bold, and visually dominant."> High / Intense</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Color</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-surface-color" value="neutral" data-desc="Surfaces use only neutral, achromatic tones."> Neutral</label>
+            <label><input type="radio" name="dd-surface-color" value="mixed" data-desc="Surfaces mix neutral tones with selective use of brand or accent colors."> Mixed</label>
+            <label><input type="radio" name="dd-surface-color" value="colored" data-desc="Surfaces primarily use chromatic brand or accent colors."> Colored</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Colorfulness</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-surface-colorfulness" value="bw" data-desc="The palette is strictly monochrome &mdash; black, white, and grays only."> Black &amp; white</label>
+            <label><input type="radio" name="dd-surface-colorfulness" value="one-color" data-desc="One brand or accent color is used alongside neutrals."> One brand/accent color</label>
+            <label><input type="radio" name="dd-surface-colorfulness" value="two-colors" data-desc="Two brand or accent colors are used alongside neutrals."> Two brand/accent colors</label>
+            <label><input type="radio" name="dd-surface-colorfulness" value="multicolor" data-desc="Multiple brand and accent colors are used freely throughout."> Multicolor</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Inputs & Cards -->
+      <div class="export-overlay-group">
+        <div class="export-overlay-group-title">Inputs &amp; Cards</div>
+        <div class="export-overlay-group-body">
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Shapes</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-shapes" value="outlined" data-desc="Inputs and cards use outlined/stroked shapes with transparent fills."> Outlined</label>
+            <label><input type="radio" name="dd-shapes" value="solid" data-desc="Inputs and cards use solid filled shapes."> Solid</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Edges / Outlines</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-edges" value="none" data-desc="No visible borders or outlines on inputs and cards."> None</label>
+            <label><input type="radio" name="dd-edges" value="hairline" data-desc="Inputs and cards have thin 1px borders."> Hairline</label>
+            <label><input type="radio" name="dd-edges" value="thick" data-desc="Inputs and cards have prominent, heavy borders."> Thick</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+
+        <div class="export-overlay-param">
+          <div class="export-overlay-param-title">Corners</div>
+          <div class="export-overlay-radio-row">
+            <label><input type="radio" name="dd-corners" value="sharp" data-desc="Inputs and cards have sharp, squared corners (0 radius)."> Sharp</label>
+            <label><input type="radio" name="dd-corners" value="soft" data-desc="Inputs and cards have gently rounded corners."> Soft</label>
+            <label><input type="radio" name="dd-corners" value="rounded" data-desc="Inputs and cards have pronounced, clearly visible rounded corners."> Rounded</label>
+          </div>
+          <div class="export-overlay-param-desc"></div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Design Token Collections -->
+    <div class="export-overlay-section">
+      <div class="export-overlay-section-title">Design Token Collections</div>
+      <div class="export-overlay-section-desc">Core, Semantic, and Component tokens (Buttons, Input Fields, Cards) are always exported. Select additional collections below to scaffold comprehensive token sets.</div>
+      <div class="interface-export-options">
+        <label class="interface-export-option">
+          <input type="checkbox" id="export-breakpoints">
+          <div>
+            <div class="interface-export-option-label">Breakpoints (adds: S/M/L/XL/2XL)</div>
+            <div class="interface-export-option-desc">Adds collections with frame width and headlines per breakpoint mode</div>
+          </div>
+        </label>
+        <label class="interface-export-option">
+          <input type="checkbox" id="export-density">
+          <div>
+            <div class="interface-export-option-label">Density (adds: Compact)</div>
+            <div class="interface-export-option-desc">Size and spacing scaled down 2 steps</div>
+          </div>
+        </label>
+        <label class="interface-export-option">
+          <input type="checkbox" id="export-colors">
+          <div>
+            <div class="interface-export-option-label">Colors (Brand/Accent/Combos)</div>
+            <div class="interface-export-option-desc">Each color as a switchable collection</div>
+          </div>
+        </label>
+        <label class="interface-export-option">
+          <input type="checkbox" id="export-typography">
+          <div>
+            <div class="interface-export-option-label">Typography</div>
+            <div class="interface-export-option-desc">Adds a collection so font families &amp; weights per platform can be added (e.g. iOS, Android)</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="export-overlay-actions">
+      <button class="export-overlay-cancel" onclick="closeExportOverlay()">Cancel</button>
+      <button class="export-overlay-confirm" onclick="exportTokens()">Export</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+function openExportOverlay() {
+  document.getElementById('export-overlay').classList.add('open');
+}
+function closeExportOverlay() {
+  document.getElementById('export-overlay').classList.remove('open');
+}
+
+/* Character counter for style description */
+document.getElementById('export-style-desc').addEventListener('input', function() {
+  document.getElementById('export-style-desc-count').textContent = this.value.length;
+});
+
+/* Dynamic param-desc: show description of the selected radio option + sync to URL */
+document.querySelectorAll('.export-overlay-radio-row input[type="radio"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    const desc = this.closest('.export-overlay-param').querySelector('.export-overlay-param-desc');
+    if (desc) desc.textContent = this.dataset.desc || '';
+    if (typeof syncUrlParams === 'function') syncUrlParams();
+  });
+});
+
+/* Close export overlay on Escape */
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const overlay = document.getElementById('export-overlay');
+    if (overlay && overlay.classList.contains('open')) closeExportOverlay();
+  }
+});
+</script>
 
 <script src="src/color-math.js"></script>
 <script src="src/token-calculations.js"></script>

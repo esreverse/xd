@@ -20,6 +20,8 @@ const URL_PARAM_MAP = {
   fontSans:            'p-fontSans',
   fontSerif:           'p-fontSerif',
   fontWeight:          'p-weight',
+  styleName:           'export-style-name',
+  styleDesc:           'export-style-desc',
 };
 
 /* Reverse map: HTML ID → URL param name */
@@ -31,8 +33,11 @@ function parseHash() {
   if (!hash) return {};
   const params = {};
   for (const pair of hash.split('&')) {
-    const [k, v] = pair.split('=');
-    if (k && v !== undefined) params[decodeURIComponent(k)] = decodeURIComponent(v);
+    const idx = pair.indexOf('=');
+    if (idx < 1) continue;
+    const k = pair.slice(0, idx);
+    const v = pair.slice(idx + 1);
+    params[decodeURIComponent(k)] = decodeURIComponent(v);
   }
   return params;
 }
@@ -110,11 +115,23 @@ function applyUrlParams() {
   if (params['mode'] === 'dark' && !isDark) {
     isDark = true;
     document.getElementById('main').classList.add('dark-mode');
+    document.body.classList.add('dark-mode');
     /* Sync toggle UI */
     document.querySelectorAll('#modeTabs .interface-pill-tab').forEach(t => t.classList.remove('active'));
     const darkTab = document.querySelector('#modeTabs .interface-pill-tab[data-mode="dark"]');
     if (darkTab) darkTab.classList.add('active');
   }
+
+  /* ── Design Decisions (dd-* radio buttons) ── */
+  document.querySelectorAll('.export-overlay-radio-row input[type="radio"][name^="dd-"]').forEach(radio => {
+    const name = radio.getAttribute('name');
+    if (params[name] && radio.value === params[name]) {
+      radio.checked = true;
+      /* Trigger desc text */
+      const desc = radio.closest('.export-overlay-param')?.querySelector('.export-overlay-param-desc');
+      if (desc) desc.textContent = radio.dataset.desc || '';
+    }
+  });
 
   /* ── Combo colors: combo1, combo2, … ──
      Format: bgSource.fgSource.bgShade.fgShade.inverted
@@ -193,6 +210,11 @@ function syncUrlParams() {
 
   /* ── Mode ── */
   if (isDark) parts.push('mode=dark');
+
+  /* ── Design Decisions (dd-* radio buttons) — only checked ones ── */
+  document.querySelectorAll('.export-overlay-radio-row input[type="radio"][name^="dd-"]:checked').forEach(radio => {
+    parts.push(`${radio.name}=${encodeURIComponent(radio.value)}`);
+  });
 
   /* ── Combo colors ──
      Format: bgSource.fgSource.bgShade.fgShade.inverted */

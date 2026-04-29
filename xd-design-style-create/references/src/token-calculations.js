@@ -51,9 +51,10 @@ function calcSpacing(sf) {
 }
 
 function calcBorderWidth(bw) {
-  /* Parametric: base values × multiplier. bw=1 → [0, 0.5, 1, 1.5, 2, 2.5, 3], bw=4 → [0, 2, 4, 6, 8, 10, 12] */
+  /* Parametric: base values × multiplier. bw=1 → [0, 0.5, 1, 1.5, 2, 2.5, 3], bw=4 → [0, 2, 4, 6, 8, 10, 12].
+     Sub-pixel values (0.5, 1.5, 2.5) are preserved — borders are stroke widths, not snapped to the 4px grid. */
   const bases = [0, 0.5, 1, 1.5, 2, 2.5, 3];
-  const vals = bases.map(b => Math.round(b * bw)); /* snap to integer px */
+  const vals = bases.map(b => Math.round(b * bw * 2) / 2); /* snap to 0.5px raster */
   return [
     { name: 'none', val: 0 },
     { name: 'XS',   val: vals[1] },
