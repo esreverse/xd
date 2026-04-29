@@ -27,6 +27,8 @@ Restart your Claude Code session — `/xd-design-style-create` and `/xd-design-s
 
 Open a WYSIWYG visual explorer in the browser, configure a complete design system, export DTCG tokens.
 
+**Every state lives in the URL.** All parameters — colors, typography, spacing, design decisions — are encoded as a URL hash, so any configuration can be bookmarked, shared, embedded in docs, or restored months later by opening the link.
+
 
 ### Starting points
 
@@ -45,7 +47,7 @@ Begin from any of these — Claude maps the source to the parametric tool:
 
 ### Visual explorer
 
-A fully parametric, real-time design system explorer. Every state is a shareable URL.
+A fully parametric, real-time design system explorer.
 
 **Live preview** — a complete component library (buttons, inputs, cards, navigation, dialogs, tables, alerts, tabs, …), typography composites (H1–H6, body, caption, eyebrow, code), article layouts, surface stacks, every state (default / hover / active / focus / disabled / error), light and dark mode side by side.
 
