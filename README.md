@@ -97,7 +97,11 @@ Take the exported DTCG token files and write them into a Figma file as native Va
 
 ### Requirements
 
-Access to the Figma Plugin API via the official Figma MCP server (`mcp.figma.com`) or the Figma Console MCP. The skill writes via `use_figma`.
+Access to the Figma Plugin API to write Variables, Text Styles, and Effect Styles. **One of the following three** is required:
+
+- **[Figma MCP Server (official)](https://developers.figma.com/docs/figma-mcp-server/)** — Figma's hosted remote MCP at `mcp.figma.com`; exposes `use_figma` for Plugin API execution
+- **[Figma Console MCP](https://github.com/southleft/figma-console-mcp)** — community MCP that bridges to the Figma Desktop app via plugin and exposes `figma_execute`
+- **[Figma CLI by Sil Bormüller](https://github.com/silships/figma-cli)** — CLI bridge to Figma Desktop with write support for Variables, Text Styles, and Effect Styles
 
 
 
